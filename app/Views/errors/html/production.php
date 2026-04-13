@@ -18,7 +18,13 @@
 
         <p class="lead"><?= lang('Errors.weHitASnag') ?></p>
 
+        <p><button class="btn-back" type="button" onclick="history.back()">Back</button></p>
+
     </div>
+
+    <style>
+        .btn-back{padding:8px 12px;border-radius:6px;border:1px solid #e6eef6;background:#fff;cursor:pointer;font-weight:700}
+    </style>
 
 </body>
 

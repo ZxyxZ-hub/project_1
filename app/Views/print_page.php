@@ -28,4 +28,12 @@ body {
 </div>
 
 <br>
-<button onclick="window.print()">Print</button>
+<div style="display:flex;gap:12px;align-items:center;">
+    <button class="btn-back" type="button" onclick="history.back()">Back</button>
+    <button onclick="window.print()">Print</button>
+</div>
+
+<style>
+    .btn-back{background:#fff;border:1px solid #000;padding:6px 10px;border-radius:6px;cursor:pointer;font-weight:700}
+    @media print{.btn-back{display:none}}
+</style>

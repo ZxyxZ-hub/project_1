@@ -66,6 +66,7 @@
         a:visited {
             color: #dd4814;
         }
+        .btn-back{display:inline-block;margin-top:18px;padding:8px 12px;border-radius:6px;border:1px solid #ddd;background:#fff;color:#333;cursor:pointer}
     </style>
 </head>
 <body>
@@ -79,6 +80,7 @@
                 <?= lang('Errors.sorryCannotFind') ?>
             <?php endif; ?>
         </p>
+        <button class="btn-back" type="button" onclick="history.back()">Back</button>
     </div>
 </body>
 </html>

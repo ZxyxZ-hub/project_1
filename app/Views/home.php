@@ -30,7 +30,7 @@
     }
 
     /* Floating "form" style applied to the existing link */
-    a[href="/form"] {
+    a.get-started {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -57,25 +57,25 @@
         50%  { transform: translateY(-8px); }
         100% { transform: translateY(0); }
     }
-    a[href="/form"] {
+    a.get-started {
         animation: floatY 3.6s ease-in-out infinite;
     }
 
     /* Hover / focus states for interactivity and accessibility */
-    a[href="/form"]:hover,
-    a[href="/form"]:focus {
+    a.get-started:hover,
+    a.get-started:focus {
         transform: translateY(-10px) scale(1.02);
         box-shadow: 0 28px 60px rgba(0,0,0,0.28);
         filter: brightness(1.02);
         outline: none;
     }
 
-    a[href="/form"]:focus-visible {
+    a.get-started:focus-visible {
         box-shadow: 0 28px 60px rgba(0,0,0,0.28), 0 0 0 4px rgba(102,126,234,0.15);
     }
 
     /* Small decorative chevron using pseudo-element */
-    a[href="/form"]::after {
+    a.get-started::after {
         content: "→";
         font-size: 1.05rem;
         opacity: 0.95;
@@ -83,7 +83,7 @@
         margin-left: 6px;
         transform: translateX(0);
     }
-    a[href="/form"]:hover::after {
+    a.get-started:hover::after {
         transform: translateX(6px);
         opacity: 1;
     }
@@ -91,9 +91,9 @@
     /* Responsive tweaks */
     @media (max-width: 480px) {
         h1 { font-size: 1.6rem; margin-bottom: 0.9rem; }
-        a[href="/form"] { min-width: 180px; padding: 14px 20px; border-radius: 12px; }
+        a.get-started { min-width: 180px; padding: 14px 20px; border-radius: 12px; }
     }
 </style>
 
 <h1>ORD Form System</h1>
-<a href="/form">Get Started</a>
+    <a class="get-started" href="form">Get Started</a>
