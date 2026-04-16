@@ -1,12 +1,12 @@
 <style>
 /* Container */
 .db-view{
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	max-width:900px;
 	margin:20px auto;
 	background:#fff;
-	padding:12px;
-	border:2px solid #000;
+	padding:18px;
+	border:3px solid #666;
 	box-sizing:border-box;
 }
 
@@ -15,35 +15,42 @@
 	justify-content:space-between;
 	align-items:center;
 	gap:12px;
-	margin-bottom:12px;
+	margin-bottom:18px;
+}
+
+.db-view header h2{
+	font-weight:700;
+	font-size:1.5rem;
+	margin:0;
 }
 
 /* Grid layout: 2 columns. We'll explicitly place items so fields line up as requested. */
 .record{
 	display:grid;
 	grid-template-columns: 1fr 2fr 1fr;
-	gap:8px;
+	gap:12px;
 }
 
 /* Make sure grid children can shrink so long words wrap instead of overflowing into adjacent cells */
 .record > p{ min-width:0; }
 
 /* From row (above the grid) */
-.from-row{ margin-bottom:8px; }
+.from-row{ margin-bottom:12px; }
 .from-row .from-field{
-	padding:8px;
-	border:1px solid #000;
+	padding:12px;
+	border:3px solid #666;
 	min-height:40px;
 	box-sizing:border-box;
+	font-weight:700;
 }
 
-.from-row .from-field::before{ content: "From: "; font-weight:bold; margin-right:8px; }
+.from-row .from-field::before{ content: "From: "; font-weight:700; margin-right:8px; }
 
 /* Field boxes */
 .db-view p{
 	margin:0;
-	padding:10px;
-	border:1px solid #000;
+	padding:12px;
+	border:3px solid #666;
 	background:#fff;
 	box-sizing:border-box;
 	word-wrap :break-word;
@@ -55,7 +62,7 @@
 
 /* Label prefix styling (keeps label separate from value and allows wrapping) */
 .db-view p::before{
-	font-weight:bold;
+	font-weight:700;
 	margin-right:8px;
 	display:inline-block;
 }
@@ -93,32 +100,48 @@
 
 /* Buttons */
 .btn-print{
-	background: linear-gradient(90deg,#0ea5e9,#6366f1);
-	color:#fff;
-	padding:10px 20px;
+	background: #21aef5ff;
+	color:#000;
+	padding:12px 24px;
 	border:none;
 	font-size:14px;
+	font-weight:700;
 	cursor:pointer;
-	border-radius:6px;
+	border-radius:8px;
 	text-decoration:none;
-	display:inline-block;
+	display:inline-flex;
+	align-items:center;
+	gap:8px;
+	box-shadow: 0 8px 20px rgba(251, 191, 36, 0.18);
+	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.btn-print:hover{
+	transform: translateY(-4px) scale(1.02);
+	box-shadow: 0 14px 34px rgba(251, 191, 36, 0.22);
 }
 
 .btn-close{
-	background:#e11d48; /* red */
+	background:#f70b0b;
 	color:#fff;
+	padding:12px 24px;
 	border:none;
-	padding:8px 12px;
 	cursor:pointer;
-	border-radius:6px;
+	border-radius:8px;
 	font-weight:700;
+	font-size:14px;
+	box-shadow: 0 8px 20px rgba(247, 11, 11, 0.18);
+	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
-.btn-print:hover, .btn-close:hover{ transform:translateY(-2px); }
+.btn-close:hover{
+	transform: translateY(-4px) scale(1.02);
+	box-shadow: 0 14px 34px rgba(247, 11, 11, 0.22);
+}
 
 </style>
 <style>
-	.actions{ text-align:center; margin-top:14px; }
+	.actions{ text-align:center; margin-top:18px; }
 </style>
 
 <div class="db-view">

@@ -61,6 +61,65 @@ class Form extends BaseController
         return view('view_page', $data);
     }
 
+    public function delete()
+    {
+        try {
+            $action = $this->request->getPost('action');
+            
+            if ($action === 'delete_single') {
+                $id = $this->request->getPost('id');
+                if (!$id) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'No ID provided']);
+                }
+                
+                $model = new FormModel();
+                // Use query builder to delete
+                $db = db_connect();
+                $result = $db->table('forms')->where('id', $id)->delete();
+                
+                return $this->response->setJSON(['success' => true, 'message' => 'Entry deleted successfully']);
+                
+            } elseif ($action === 'delete_all') {
+                $db = db_connect();
+                $db->table('forms')->emptyTable();
+                return $this->response->setJSON(['success' => true, 'message' => 'All entries deleted successfully']);
+                
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'Invalid action']);
+            }
+            
+        } catch (\Exception $e) {
+            log_message('error', 'Delete error: ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false, 
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function listAll()
+    {
+        $model = new FormModel();
+        $data['forms'] = $model->orderBy('id', 'DESC')->findAll();
+        return view('list_page', $data);
+    }
+
+    public function recent()
+    {
+        try {
+            $model = new FormModel();
+            $forms = $model->orderBy('id', 'DESC')->findAll();
+            return $this->response
+                ->setContentType('application/json')
+                ->setJSON(['success' => true, 'forms' => $forms]);
+        } catch (\Exception $e) {
+            return $this->response
+                ->setStatusCode(500)
+                ->setContentType('application/json')
+                ->setJSON(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
     public function print($id)
     {
         $model = new FormModel();
