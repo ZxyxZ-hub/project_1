@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Setup extends Controller
+class Setup extends BaseController
 {
     public function index()
     {

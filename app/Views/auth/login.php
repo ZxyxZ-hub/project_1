@@ -55,8 +55,14 @@ $session = session();
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            object-fit: cover;
+            background: linear-gradient(135deg, #21aef5ff 0%, #1e9dd8ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
         }
 
         h1 {
@@ -236,9 +242,9 @@ $session = session();
 <body>
     <div class="login-container">
         <div class="logo-container">
-            <img src="<?= base_url('images/prc logo.png') ?>" alt="PRC Logo" class="logo">
+            <div class="logo">ORD</div>
         </div>
-        <h1>ORD Form System</h1>
+        <h1>Form System</h1>
         <p class="subtitle">ORD Form System</p>
 
         <?php if ($session->has('error')): ?>
