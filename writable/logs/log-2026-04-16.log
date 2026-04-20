@@ -403,3 +403,35 @@ DEBUG - 2026-04-16 08:46:49 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-04-16 08:46:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-04-16 08:49:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-04-16 08:50:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-04-16 08:52:22 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\laragon\www\project_1\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\laragon\www\project_1\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'project1', 3306, '', 0)
+#1 C:\laragon\www\project_1\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\laragon\www\project_1\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\laragon\www\project_1\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\laragon\www\project_1\system\Model.php(253): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\laragon\www\project_1\system\BaseModel.php(676): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\laragon\www\project_1\app\Controllers\Form.php(111): CodeIgniter\BaseModel->findAll()
+#7 C:\laragon\www\project_1\system\CodeIgniter.php(951): App\Controllers\Form->recent()
+#8 C:\laragon\www\project_1\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+#9 C:\laragon\www\project_1\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\laragon\www\project_1\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\laragon\www\project_1\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\laragon\www\project_1\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\laragon\www\project_1\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\laragon\www\project_1\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\laragon\www\project_1\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\laragon\www\project_1\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\laragon\www\project_1\system\Model.php(253): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\laragon\www\project_1\system\BaseModel.php(676): CodeIgniter\Model->doFindAll(0, 0)
+#5 C:\laragon\www\project_1\app\Controllers\Form.php(111): CodeIgniter\BaseModel->findAll()
+#6 C:\laragon\www\project_1\system\CodeIgniter.php(951): App\Controllers\Form->recent()
+#7 C:\laragon\www\project_1\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+#8 C:\laragon\www\project_1\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\laragon\www\project_1\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#10 C:\laragon\www\project_1\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\laragon\www\project_1\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}

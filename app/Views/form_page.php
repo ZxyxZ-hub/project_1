@@ -356,9 +356,17 @@
         margin-top: 12px !important;
     }
 
-    .modal-form button[type="submit"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 12px 30px rgba(33, 174, 245, 0.25) !important;
+    .modal-form input:disabled,
+    .modal-form textarea:disabled {
+        background: #f3f4f6 !important;
+        color: #999 !important;
+        cursor: not-allowed !important;
+        border-color: #d1d5db !important;
+    }
+
+    .modal-form input:disabled::placeholder,
+    .modal-form textarea:disabled::placeholder {
+        color: #bbb !important;
     }
 
     /* Responsive tweaks */
@@ -515,27 +523,27 @@
             <form method="post" action="" class="modal-form">
                 <div class="form-group">
                     <label for="from_name">From Name</label>
-                    <input id="from_name" name="from_name" placeholder="Enter name">
+                    <input id="from_name" name="from_name" placeholder="Enter name" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="date_received">Date Received</label>
-                    <input id="date_received" type="date" name="date_received">
+                    <input id="date_received" type="date" name="date_received" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="origin">Origin</label>
-                    <input id="origin" name="origin" placeholder="Enter origin">
+                    <input id="origin" name="origin" placeholder="Enter origin" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="reference_no">Reference No</label>
-                    <input id="reference_no" name="reference_no" placeholder="Enter reference number">
+                    <input id="reference_no" name="reference_no" placeholder="Enter reference number" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="subject">Subject</label>
-                    <textarea id="subject" name="subject" placeholder="Enter subject"></textarea>
+                    <textarea id="subject" name="subject" placeholder="Enter subject" required></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -584,6 +592,10 @@ document.addEventListener('DOMContentLoaded', function () {
     btnCreate.addEventListener('click', function (e) {
         e.preventDefault();
         formModal.classList.add('show');
+        // Reinitialize field access when opening the form
+        setTimeout(function() {
+            initializeFieldAccess();
+        }, 100);
     });
 
     // Close floating form modal
@@ -591,12 +603,83 @@ document.addEventListener('DOMContentLoaded', function () {
         formModal.classList.remove('show');
     });
 
-    // Close modal when clicking outside (on overlay)
-    formModal.addEventListener('click', function (e) {
-        if (e.target === formModal) {
-            formModal.classList.remove('show');
+    // Prevent Enter key from submitting form on input fields
+    // Allow Enter to create new lines in textareas
+    var modalForm = document.querySelector('.modal-form');
+    if (modalForm) {
+        var inputFields = modalForm.querySelectorAll('input');
+        inputFields.forEach(function(field) {
+            field.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+        });
+    }
+
+    // Sequential field access - only enable next field when current is filled
+    var formGroups = document.querySelectorAll('.form-group');
+    var sequentialFields = [];
+    
+    formGroups.forEach(function(group, index) {
+        var field = group.querySelector('input, textarea');
+        if (field && field.name !== 'instructions') {
+            sequentialFields.push(field);
         }
     });
+
+    // Initialize: disable all fields except the first one
+    function initializeFieldAccess() {
+        sequentialFields.forEach(function(field, index) {
+            if (index === 0) {
+                field.disabled = false;
+            } else {
+                field.disabled = true;
+            }
+        });
+        // Instructions field is always enabled
+        var instructionsField = document.getElementById('instructions');
+        if (instructionsField) {
+            instructionsField.disabled = false;
+        }
+    }
+
+    // Check if a field is filled
+    function isFieldFilled(field) {
+        return field && field.value && field.value.trim() !== '';
+    }
+
+    // Update field access based on previous fields
+    function updateFieldAccess() {
+        sequentialFields.forEach(function(field, index) {
+            if (index === 0) {
+                field.disabled = false;
+            } else {
+                // Check if all previous fields are filled
+                var allPreviousFilled = true;
+                for (var i = 0; i < index; i++) {
+                    if (!isFieldFilled(sequentialFields[i])) {
+                        allPreviousFilled = false;
+                        break;
+                    }
+                }
+                field.disabled = !allPreviousFilled;
+            }
+        });
+    }
+
+    // Add event listeners to all sequential fields
+    sequentialFields.forEach(function(field) {
+        field.addEventListener('input', function() {
+            updateFieldAccess();
+        });
+        field.addEventListener('change', function() {
+            updateFieldAccess();
+        });
+    });
+
+    // Initialize on form open
+    initializeFieldAccess();
 
     // Handle form submission via AJAX to keep modal open
     var modalForm = document.querySelector('.modal-form');
@@ -674,6 +757,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clear form but keep modal open
             if (modalForm) {
                 modalForm.reset();
+                // Reinitialize sequential field access
+                setTimeout(function() {
+                    initializeFieldAccess();
+                }, 50);
             }
             confirmDialog.classList.remove('show');
             // Focus on first input for better UX
