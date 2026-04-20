@@ -8,6 +8,11 @@ class CreateForms extends Migration
 {
     public function up()
     {
+        // Check if table already exists
+        if ($this->db->tableExists('forms')) {
+            return;
+        }
+
         $this->forge->addField('id');
         $this->forge->addField([
             'from_name'     => ['type' => 'VARCHAR', 'constraint' => 255],

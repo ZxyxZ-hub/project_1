@@ -5,29 +5,35 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->get('/form', 'Form::index');
-$routes->get('/form/list', 'Form::listAll');
-$routes->get('/form/recent', 'Form::recent');
-$routes->post('/form/save', 'Form::save');
-// Accept POST directly to '/form' so relative form posts work (no redirect)
-$routes->post('/form', 'Form::save');
-$routes->post('/form/delete', 'Form::delete');
-$routes->get('/form/view/(:num)', 'Form::view/$1');
-$routes->get('/form/print/(:num)', 'Form::print/$1');
-// Also accept non-numeric segments gracefully and let controller validate
-$routes->get('/form/view/(:any)', 'Form::view/$1');
 
-// Support accessing the project by folder name (e.g. http://localhost/project_1/...)
-$routes->get('project_1', 'Home::index');
-$routes->get('project_1/form', 'Form::index');
-$routes->get('project_1/form/list', 'Form::listAll');
-$routes->get('project_1/form/recent', 'Form::recent');
-$routes->post('project_1/form/save', 'Form::save');
-// Also accept POST to 'project_1/form'
-$routes->post('project_1/form', 'Form::save');
-$routes->post('project_1/form/delete', 'Form::delete');
-$routes->get('project_1/form/view/(:num)', 'Form::view/$1');
-$routes->get('project_1/form/print/(:num)', 'Form::print/$1');
-// Also accept non-numeric segments for project_1 path
-$routes->get('project_1/form/view/(:any)', 'Form::view/$1');
+// Setup route (for initialization)
+$routes->get('setup', 'Setup::index');
+
+// Default route - redirect to login
+$routes->get('/', 'Auth::login');
+
+// Authentication routes
+$routes->get('auth/login', 'Auth::login');
+$routes->post('auth/login-submit', 'Auth::loginSubmit');
+$routes->get('auth/signup', 'Auth::signup');
+$routes->post('auth/signup-submit', 'Auth::signupSubmit');
+$routes->post('auth/logout', 'Auth::logout');
+
+// Admin routes (protected - requires login)
+$routes->get('admin', 'Admin::index', ['filter' => 'auth']);
+$routes->post('admin/approve-user/(:num)', 'Admin::approveUser/$1', ['filter' => 'auth']);
+$routes->post('admin/deny-user/(:num)', 'Admin::denyUser/$1', ['filter' => 'auth']);
+$routes->post('admin/update-role/(:num)', 'Admin::updateRole/$1', ['filter' => 'auth']);
+$routes->post('admin/reset-password/(:num)', 'Admin::resetPassword/$1', ['filter' => 'auth']);
+$routes->post('admin/delete-user/(:num)', 'Admin::deleteUser/$1', ['filter' => 'auth']);
+
+// Form routes (protected - requires login)
+$routes->get('form', 'Form::index', ['filter' => 'auth']);
+$routes->get('form/list', 'Form::listAll', ['filter' => 'auth']);
+$routes->get('form/recent', 'Form::recent', ['filter' => 'auth']);
+$routes->post('form/save', 'Form::save', ['filter' => 'auth']);
+$routes->post('form', 'Form::save', ['filter' => 'auth']);
+$routes->post('form/delete', 'Form::delete', ['filter' => 'auth']);
+$routes->get('form/view/(:num)', 'Form::view/$1', ['filter' => 'auth']);
+$routes->get('form/print/(:num)', 'Form::print/$1', ['filter' => 'auth']);
+$routes->get('form/view/(:any)', 'Form::view/$1', ['filter' => 'auth']);
