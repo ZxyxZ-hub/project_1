@@ -13,19 +13,19 @@ $routes->get('setup', 'Setup::index');
 $routes->get('/', 'Auth::login');
 
 // Authentication routes
-$routes->get('auth/login', 'Auth::login');
-$routes->post('auth/login-submit', 'Auth::loginSubmit');
-$routes->get('auth/signup', 'Auth::signup');
-$routes->post('auth/signup-submit', 'Auth::signupSubmit');
-$routes->post('auth/logout', 'Auth::logout');
+$routes->get('auth/login', 'Auth::login', ['as' => 'login']);
+$routes->post('auth/login-submit', 'Auth::loginSubmit', ['as' => 'login-submit']);
+$routes->get('auth/signup', 'Auth::signup', ['as' => 'signup']);
+$routes->post('auth/signup-submit', 'Auth::signupSubmit', ['as' => 'signup-submit']);
+$routes->post('auth/logout', 'Auth::logout', ['as' => 'logout']);
 
-// Admin routes (protected - requires login)
-$routes->get('admin', 'Admin::index', ['filter' => 'auth']);
-$routes->post('admin/approve-user/(:num)', 'Admin::approveUser/$1', ['filter' => 'auth']);
-$routes->post('admin/deny-user/(:num)', 'Admin::denyUser/$1', ['filter' => 'auth']);
-$routes->post('admin/update-role/(:num)', 'Admin::updateRole/$1', ['filter' => 'auth']);
-$routes->post('admin/reset-password/(:num)', 'Admin::resetPassword/$1', ['filter' => 'auth']);
-$routes->post('admin/delete-user/(:num)', 'Admin::deleteUser/$1', ['filter' => 'auth']);
+// Admin routes (protected - requires admin role)
+$routes->get('admin', 'Admin::index', ['filter' => 'auth:admin']);
+$routes->post('admin/approve-user/(:num)', 'Admin::approveUser/$1', ['filter' => 'auth:admin']);
+$routes->post('admin/deny-user/(:num)', 'Admin::denyUser/$1', ['filter' => 'auth:admin']);
+$routes->post('admin/update-role/(:num)', 'Admin::updateRole/$1', ['filter' => 'auth:admin']);
+$routes->post('admin/reset-password/(:num)', 'Admin::resetPassword/$1', ['filter' => 'auth:admin']);
+$routes->post('admin/delete-user/(:num)', 'Admin::deleteUser/$1', ['filter' => 'auth:admin']);
 
 // Form routes (protected - requires login)
 $routes->get('form', 'Form::index', ['filter' => 'auth']);

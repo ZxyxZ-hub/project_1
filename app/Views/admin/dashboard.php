@@ -9,6 +9,8 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= csrf_hash() ?>">
+    <meta name="csrf-header" content="<?= csrf_header() ?>">
     <title>Admin Dashboard - ORD Form System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -360,6 +362,18 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         </form>
     </header>
 
+    <!-- Flash Messages -->
+    <?php if (session()->has('success')): ?>
+        <div style="background: #10b981; color: white; padding: 15px 20px; margin: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            ✅ <?= session('success') ?>
+        </div>
+    <?php endif; ?>
+    <?php if (session()->has('error')): ?>
+        <div style="background: #ef4444; color: white; padding: 15px 20px; margin: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            ❌ <?= session('error') ?>
+        </div>
+    <?php endif; ?>
+
     <div class="container">
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('pending')">⏳ Pending Sign-ups</button>
@@ -533,8 +547,35 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         </div>
     </div>
 
+    <!-- Approve User Form (hidden) -->
+    <form id="approveUserForm" method="POST" action="" style="display:none;">
+        <?= csrf_field() ?>
+        <input type="hidden" name="role" id="approveUserRole">
+    </form>
+
+    <!-- Update Role Form (hidden) -->
+    <form id="updateRoleForm" method="POST" action="" style="display:none;">
+        <?= csrf_field() ?>
+        <input type="hidden" name="role" id="updateRoleValue">
+    </form>
+
+    <!-- Reset Password Form (hidden) -->
+    <form id="resetPasswordForm" method="POST" action="" style="display:none;">
+        <?= csrf_field() ?>
+        <input type="hidden" name="password" id="resetPasswordValue">
+    </form>
+
+    <!-- Deny User Form (hidden) -->
+    <form id="denyUserForm" method="POST" action="" style="display:none;">
+        <?= csrf_field() ?>
+    </form>
+
+    <!-- Delete User Form (hidden) -->
+    <form id="deleteUserForm" method="POST" action="" style="display:none;">
+        <?= csrf_field() ?>
+    </form>
+
     <script>
-        const baseUrl = '<?= base_url('admin') ?>';
         let currentUserId = null;
         let currentUserRole = null;
 
@@ -580,59 +621,31 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
 
         async function approveUser() {
             const role = document.getElementById('approveRole').value;
-            const response = await fetch(`${baseUrl}/approve-user/${currentUserId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `role=${role}`
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                alert('User approved successfully!');
-                location.reload();
-            } else {
-                alert('Error: ' + data.message);
-            }
+            const form = document.getElementById('approveUserForm');
+            form.action = `<?= base_url('index.php/admin/approve-user/') ?>${currentUserId}`;
+            document.getElementById('approveUserRole').value = role;
+            form.submit();
         }
 
         async function denyUser(userId) {
             if (!confirm('Are you sure you want to deny this user?')) return;
-
-            const response = await fetch(`${baseUrl}/deny-user/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                alert('User denied successfully!');
-                location.reload();
-            } else {
-                alert('Error: ' + data.message);
-            }
+            const form = document.getElementById('denyUserForm');
+            form.action = `<?= base_url('index.php/admin/deny-user/') ?>${userId}`;
+            form.submit();
         }
 
         async function updateRole() {
             const role = document.getElementById('newRole').value;
-            const response = await fetch(`${baseUrl}/update-role/${currentUserId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `role=${role}`
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                alert('Role updated successfully!');
-                location.reload();
-            } else {
-                alert('Error: ' + data.message);
+            
+            if (!currentUserId) {
+                alert('Error: User ID not set');
+                return;
             }
+
+            const form = document.getElementById('updateRoleForm');
+            form.action = `<?= base_url('index.php/admin/update-role/') ?>${currentUserId}`;
+            document.getElementById('updateRoleValue').value = role;
+            form.submit();
         }
 
         async function resetPassword() {
@@ -649,41 +662,18 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
                 return;
             }
 
-            const response = await fetch(`${baseUrl}/reset-password/${currentUserId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `password=${newPassword}`
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                alert('Password reset successfully!');
-                closeModal('editPasswordModal');
-                location.reload();
-            } else {
-                alert('Error: ' + data.message);
-            }
+            const form = document.getElementById('resetPasswordForm');
+            form.action = `<?= base_url('index.php/admin/reset-password/') ?>${currentUserId}`;
+            document.getElementById('resetPasswordValue').value = newPassword;
+            form.submit();
         }
 
         async function deleteUser(userId) {
             if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
 
-            const response = await fetch(`${baseUrl}/delete-user/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                alert('User deleted successfully!');
-                location.reload();
-            } else {
-                alert('Error: ' + data.message);
-            }
+            const form = document.getElementById('deleteUserForm');
+            form.action = `<?= base_url('index.php/admin/delete-user/') ?>${userId}`;
+            form.submit();
         }
 
         // Initialize password toggle buttons

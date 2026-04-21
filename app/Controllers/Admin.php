@@ -3,12 +3,11 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use CodeIgniter\RESTful\ResourceController;
+use App\Controllers\BaseController;
 
-class Admin extends ResourceController
+class Admin extends BaseController
 {
     protected $userModel;
-    protected $format = 'json';
 
     public function __construct()
     {
@@ -29,11 +28,11 @@ class Admin extends ResourceController
     // Approve a pending user
     public function approveUser($userId)
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->fail('Method not allowed', 405);
-        }
-
         $role = $this->request->getPost('role') ?? 'user';
+
+        if (!$userId) {
+            return redirect()->back()->with('error', 'Invalid user ID');
+        }
 
         $updated = $this->userModel->update($userId, [
             'status' => 'approved',
@@ -41,92 +40,84 @@ class Admin extends ResourceController
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        if ($updated) {
-            return $this->respond(['success' => true, 'message' => 'User approved successfully']);
+        if ($updated !== false) {
+            return redirect()->back()->with('success', 'User approved successfully');
         }
 
-        return $this->fail('Failed to approve user');
+        return redirect()->back()->with('error', 'Failed to approve user');
     }
 
     // Deny/reject a pending user
     public function denyUser($userId)
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->fail('Method not allowed', 405);
+        if (!$userId) {
+            return redirect()->back()->with('error', 'Invalid user ID');
         }
 
         $deleted = $this->userModel->delete($userId);
 
         if ($deleted) {
-            return $this->respond(['success' => true, 'message' => 'User denied successfully']);
+            return redirect()->back()->with('success', 'User denied successfully');
         }
 
-        return $this->fail('Failed to deny user');
+        return redirect()->back()->with('error', 'Failed to deny user');
     }
 
     // Update user role
     public function updateRole($userId)
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->fail('Method not allowed', 405);
-        }
+        $role = $this->request->getPost('role');
 
-        $newRole = $this->request->getPost('role');
-
-        if (!in_array($newRole, ['user', 'admin'])) {
-            return $this->fail('Invalid role');
+        if (!$userId || !$role) {
+            return redirect()->back()->with('error', 'Invalid user ID or role');
         }
 
         $updated = $this->userModel->update($userId, [
-            'role' => $newRole,
+            'role' => $role,
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        if ($updated) {
-            return $this->respond(['success' => true, 'message' => 'Role updated successfully']);
+        if ($updated !== false) {
+            return redirect()->back()->with('success', 'Role updated successfully');
         }
 
-        return $this->fail('Failed to update role');
+        return redirect()->back()->with('error', 'Failed to update role');
     }
 
     // Reset user password
     public function resetPassword($userId)
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->fail('Method not allowed', 405);
-        }
+        $password = $this->request->getPost('password');
 
-        $newPassword = $this->request->getPost('password');
-
-        if (strlen($newPassword) < 6) {
-            return $this->fail('Password must be at least 6 characters');
+        if (!$userId || !$password) {
+            return redirect()->back()->with('error', 'Invalid user ID or password');
         }
 
         $updated = $this->userModel->update($userId, [
-            'password' => password_hash($newPassword, PASSWORD_BCRYPT),
+            'password' => password_hash($password, PASSWORD_BCRYPT),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        if ($updated) {
-            return $this->respond(['success' => true, 'message' => 'Password reset successfully']);
+        if ($updated !== false) {
+            return redirect()->back()->with('success', 'Password reset successfully');
         }
 
-        return $this->fail('Failed to reset password');
+        return redirect()->back()->with('error', 'Failed to reset password');
     }
 
     // Delete an approved user
     public function deleteUser($userId)
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->fail('Method not allowed', 405);
+        if (!$userId) {
+            return redirect()->back()->with('error', 'Invalid user ID');
         }
 
         $deleted = $this->userModel->delete($userId);
 
         if ($deleted) {
-            return $this->respond(['success' => true, 'message' => 'User deleted successfully']);
+            return redirect()->back()->with('success', 'User deleted successfully');
         }
 
-        return $this->fail('Failed to delete user');
+        return redirect()->back()->with('error', 'Failed to delete user');
     }
 }

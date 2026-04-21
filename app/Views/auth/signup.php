@@ -13,7 +13,7 @@ $session = session();
 
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #21aef5ff 0%, #3eb9f7ff 100%);
+            background: linear-gradient(135deg, rgb(183, 200, 209) 0%, rgb(189, 211, 223) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -120,13 +120,25 @@ $session = session();
             outline: none;
         }
 
+        input::-webkit-credentials-auto-fill-button,
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            display: none !important;
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="password"]::-ms-reveal {
+            display: none;
+        }
+
         input:focus {
             border-color: #21aef5ff;
             box-shadow: 0 0 0 3px rgba(33, 174, 245, 0.1);
         }
 
         .btn {
-            background: linear-gradient(180deg, #21aef5ff 0%, #1e9dd8ff 100%);
+            background: rgb(46, 86, 219);
             color: #fff;
             border: none;
             padding: 14px 20px;
@@ -197,11 +209,15 @@ $session = session();
             color: black;
             font-size: 1.2rem;
             padding: 6px;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             transition: color 180ms ease, opacity 180ms ease;
             opacity: 0.5;
+        }
+
+        .toggle-password.visible {
+            display: flex;
         }
 
         .toggle-password:hover {
@@ -249,7 +265,7 @@ $session = session();
             </div>
         <?php endif; ?>
 
-        <form action="./signup-submit" method="POST">
+        <form action="<?= base_url('auth/signup-submit') ?>" method="POST">
             <?= csrf_field() ?>
 
             <div class="form-group">
@@ -267,7 +283,7 @@ $session = session();
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="password-wrapper">
-                    <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required>
+                    <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required autocomplete="off">
                     <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
                         <svg class="eye-hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                         <svg class="eye-shown" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -279,7 +295,7 @@ $session = session();
                 <label for="password_confirm">Confirm Password</label>
                 <div class="password-wrapper">
                     <input type="password" id="password_confirm" name="password_confirm" 
-                           placeholder="Confirm your password" required>
+                           placeholder="Confirm your password" required autocomplete="off">
                     <button type="button" class="toggle-password" id="togglePasswordConfirm" aria-label="Toggle password visibility">
                         <svg class="eye-hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                         <svg class="eye-shown" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -291,7 +307,7 @@ $session = session();
         </form>
 
         <div class="login-link">
-            Already have an account? <a href="./login">Login here</a>
+            Already have an account? <a href="<?= base_url('auth/login') ?>">Login here</a>
         </div>
     </div>
 
@@ -305,6 +321,23 @@ $session = session();
             function setupPasswordToggle(button, input) {
                 var eyeHidden = button.querySelector('.eye-hidden');
                 var eyeShown = button.querySelector('.eye-shown');
+                
+                // Show/hide eye icon based on input value
+                function updateIconVisibility() {
+                    if (input.value.length > 0) {
+                        button.classList.add('visible');
+                    } else {
+                        button.classList.remove('visible');
+                        // Reset to password type if field is cleared
+                        input.setAttribute('type', 'password');
+                        eyeHidden.style.display = 'block';
+                        eyeShown.style.display = 'none';
+                        button.classList.remove('active');
+                    }
+                }
+
+                // Listen for input changes
+                input.addEventListener('input', updateIconVisibility);
                 
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
