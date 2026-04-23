@@ -25,6 +25,17 @@ class Admin extends BaseController
         return view('admin/dashboard', $data);
     }
 
+    // List users separated by role (user | admin)
+    public function users()
+    {
+        $data = [
+            'users' => $this->userModel->where('role', 'user')->findAll(),
+            'admins' => $this->userModel->where('role', 'admin')->findAll(),
+        ];
+
+        return view('admin/users', $data);
+    }
+
     // Approve a pending user
     public function approveUser($userId)
     {
