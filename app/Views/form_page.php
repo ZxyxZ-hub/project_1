@@ -539,8 +539,18 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="date_issued">Date Issued</label>
+                    <input id="date_issued" type="date" name="date_issued">
+                </div>
+                
+                <div class="form-group">
                     <label for="instructions">Instructions</label>
                     <textarea id="instructions" name="instructions" placeholder="Enter instructions"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="target_date">Target Date</label>
+                    <input id="target_date" type="date" name="target_date">
                 </div>
                 
                 <button type="submit">Save</button>

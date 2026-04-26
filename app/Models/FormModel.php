@@ -14,6 +14,8 @@ class FormModel extends Model
         'origin',
         'reference_no',
         'subject',
-        'instructions'
+        'date_issued',
+        'instructions',
+        'target_date'
     ];
 }

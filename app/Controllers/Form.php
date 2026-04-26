@@ -22,7 +22,9 @@ class Form extends BaseController
             'origin' => $this->request->getPost('origin'),
             'reference_no' => $this->request->getPost('reference_no'),
             'subject' => $this->request->getPost('subject'),
+            'date_issued' => $this->request->getPost('date_issued'),
             'instructions' => $this->request->getPost('instructions'),
+            'target_date' => $this->request->getPost('target_date'),
         ]);
 
         // Instead of redirecting (which in this environment sometimes causes

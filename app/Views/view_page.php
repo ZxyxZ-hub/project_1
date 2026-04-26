@@ -10,35 +10,73 @@
 	box-sizing:border-box;
 }
 
-.db-view header{
+.db-view .top-controls{
 	display:flex;
 	justify-content:space-between;
 	align-items:center;
 	gap:12px;
-	margin-bottom:18px;
+	margin-bottom:24px;
 }
 
-.db-view header h2{
+/* Header section */
+.db-view .header-section{
+	text-align:center;
+	margin-bottom:20px;
+	border-bottom:2px solid #666;
+	padding-bottom:12px;
+}
+
+.db-view .header-section .org-name{
 	font-weight:700;
-	font-size:1.5rem;
+	font-size:1.1rem;
+	margin:0 0 4px 0;
+}
+
+.db-view .header-section .office-name{
+	font-size:0.95rem;
+	margin:0 0 8px 0;
+}
+
+.db-view .header-section .director-info{
+	font-size:0.9rem;
 	margin:0;
 }
 
-/* Grid layout: 2 columns. We'll explicitly place items so fields line up as requested. */
-.record{
+/* Info row (Date Received, Origin, Reference) */
+.info-row{
 	display:grid;
-	grid-template-columns: 1fr 2fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr;
 	gap:12px;
+	margin-bottom:12px;
 }
 
-/* Make sure grid children can shrink so long words wrap instead of overflowing into adjacent cells */
-.record > p{ min-width:0; }
+.info-row p{
+	margin:0;
+	padding:12px;
+	border:2px solid #666;
+	background:#fff;
+	box-sizing:border-box;
+	font-size:0.9rem;
+	min-height:50px;
+	display:flex;
+	align-items:center;
+}
+
+.info-row p::before{
+	font-weight:700;
+	display:block;
+	width:100%;
+}
+
+.info-row .date-received::before{ content: "Date Received:"; }
+.info-row .origin::before{ content: "Origin/Source:"; }
+.info-row .reference::before{ content: "Reference No.:"; }
 
 /* From row (above the grid) */
 .from-row{ margin-bottom:12px; }
 .from-row .from-field{
 	padding:12px;
-	border:3px solid #666;
+	border:2px solid #666;
 	min-height:40px;
 	box-sizing:border-box;
 	font-weight:700;
@@ -50,53 +88,65 @@
 .db-view p{
 	margin:0;
 	padding:12px;
-	border:3px solid #666;
+	border:2px solid #666;
 	background:#fff;
 	box-sizing:border-box;
-	word-wrap :break-word;
+	word-wrap:break-word;
 	overflow-wrap:break-word;
 	word-break:break-word;
 	hyphens:auto;
 	min-height:40px;
 }
 
-/* Label prefix styling (keeps label separate from value and allows wrapping) */
+/* Label prefix styling */
 .db-view p::before{
 	font-weight:700;
 	margin-right:8px;
 	display:inline-block;
 }
 
-/* Labels mapping (match DOM order) */
-.db-view p.date-received::before{ content: "Date Received: "; }
-.db-view p.origin::before{ content: "Origin/Source: "; }
-.db-view p.reference::before{ content: "Reference No: "; }
+/* Subject field - full width */
+.subject-section{
+	display:grid;
+	grid-template-columns: 1fr 1fr;
+	gap:12px;
+	margin-bottom:12px;
+}
+
+.db-view p.subject{
+	grid-column: 1 / -1;
+	min-height:100px;
+	display:block;
+}
+
 .db-view p.subject::before{ content: "Subject: "; }
-.db-view p.date-issued::before{ content: "Date Issued: "; }
-.db-view p.instructions::before{ content: "Instructions/Remarks: "; }
-.db-view p.target-date::before{ content: "Target Date: "; }
 
-/* Layout placement using the new 3-column grid:
-	Top row: Date Received (col1) | Origin (col2) | Reference (col3)
-	Subject: full width
-	Date Issued: placed in right column (col3)
-	Instructions: left two columns (col1-col2) | Target Date: col3
-*/
-.db-view p.date-received{ grid-column: 1 / 2; text-align:center; }
-.db-view p.origin{ grid-column: 2 / 3; text-align:center; }
-.db-view p.reference{ grid-column: 3 / 4; text-align:center; }
-.db-view p.subject{ grid-column: 1 / -1; min-height:140px; }
-.db-view p.date-issued{ grid-column: 3 / 4; min-height:40px; }
-.db-view p.instructions{ grid-column: 1 / 3; min-height:120px; }
-.db-view p.target-date{ grid-column: 3 / 4; min-height:120px; }
+.db-view p.date-issued{
+	min-height:50px;
+}
 
-/* Center the label text for top-row boxes */
-.db-view p.date-received::before,
-.db-view p.origin::before,
-.db-view p.reference::before{ display:block; text-align:center; }
+.db-view p.date-issued::before{ content: "Date Issued:"; }
 
-/* Make values wrap and center where appropriate */
-.db-view p.date-received, .db-view p.origin, .db-view p.reference{ display:flex; align-items:center; justify-content:center; text-align:center; }
+/* Bottom section - Instructions and Target Date */
+.bottom-section{
+	display:grid;
+	grid-template-columns: 1fr 1fr;
+	gap:12px;
+}
+
+.db-view p.instructions{
+	min-height:120px;
+	display:block;
+}
+
+.db-view p.instructions::before{ content: "Instructions/Remarks: "; display:block; margin-bottom:8px; }
+
+.db-view p.target-date{
+	min-height:120px;
+	display:block;
+}
+
+.db-view p.target-date::before{ content: "Target Date: "; display:block; margin-bottom:8px; }
 
 /* Buttons */
 .btn-print{
@@ -140,38 +190,38 @@
 }
 
 </style>
-<style>
-	.actions{ text-align:center; margin-top:18px; }
-</style>
+
 
 <div class="db-view">
-	<header>
-		<div style="display:flex;align-items:center;gap:8px;">
-			<button class="btn-close" type="button" onclick="history.back()">Close</button>
-		</div>
-		<h2>Review</h2>
-		<div class="meta">Record ID: <?= $form['id'] ?></div>
-	</header>
+	<div class="top-controls">
+		<button class="btn-close" type="button" onclick="history.back()">← Back</button>
+		<?php $baseForPrint = preg_replace('#/view/[^/]+$#', '', rtrim(current_url(), '/')); ?>
+		<a class="btn-print" href="<?= $baseForPrint . '/print/' . $form['id'] ?>">Print</a>
+	</div>
+
+	<div class="header-section">
+		<p class="org-name">Professional Regulation Commission</p>
+		<p class="office-name">Davao Regional Office</p>
+		<p class="director-info">Director: Raquel R. Abanites</p>
+	</div>
+
+	<div class="info-row">
+		<p class="date-received"><?= $form['date_received'] ?></p>
+		<p class="origin"><?= $form['origin'] ?></p>
+		<p class="reference"><?= $form['reference_no'] ?></p>
+	</div>
 
 	<div class="from-row">
 		<p class="from-field"><?= $form['from_name'] ?></p>
 	</div>
 
-	<div class="record">
-		<p class="date-received"><?= $form['date_received'] ?></p>
-		<p class="origin"><?= $form['origin'] ?></p>
-		<p class="reference"><?= $form['reference_no'] ?></p>
-
+	<div class="subject-section">
 		<p class="subject"><?= $form['subject'] ?></p>
-
 		<p class="date-issued"><?= isset($form['date_issued']) ? $form['date_issued'] : '' ?></p>
-
-		<p class="instructions"><?= $form['instructions'] ?></p>
-		<p class="target-date"><?= isset($form['target_date']) ? $form['target_date'] : '' ?></p>
 	</div>
 
-	<div class="actions">
-		<?php $baseForPrint = preg_replace('#/view/[^/]+$#', '', rtrim(current_url(), '/')); ?>
-		<a class="btn-print" href="<?= $baseForPrint . '/print/' . $form['id'] ?>">Print</a>
+	<div class="bottom-section">
+		<p class="instructions"><?= $form['instructions'] ?></p>
+		<p class="target-date"><?= isset($form['target_date']) ? $form['target_date'] : '' ?></p>
 	</div>
 </div>
