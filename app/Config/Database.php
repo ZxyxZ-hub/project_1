@@ -29,7 +29,7 @@ class Database extends Config
         'hostname'     => 'localhost',
         'username'     => 'root',
         'password'     => '',
-        'database'     => 'project1',
+        'database'     => 'project_1',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -193,6 +193,12 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
+
+        $database = env('database.default.database');
+
+        if (! empty($database)) {
+            $this->default['database'] = $database;
+        }
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that

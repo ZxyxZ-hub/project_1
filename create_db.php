@@ -4,7 +4,7 @@
 $hostname = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'project1';
+$database = 'project_1';
 
 // Connect without database first to create it
 $conn = new mysqli($hostname, $username, $password);

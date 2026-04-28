@@ -20,14 +20,15 @@ class AuthFilter implements FilterInterface
         // If route requires admin role, check it
         if ($arguments && in_array('admin', $arguments)) {
             if ($session->get('role') !== 'admin') {
-                return redirect()->back()->with('error', 'You do not have permission to access this page');
+                // Use a safe fallback instead of redirect()->back() to avoid loops
+                return redirect()->to('/')->with('error', 'You do not have permission to access this page');
             }
         }
 
         // If route requires user role, check it
         if ($arguments && in_array('user', $arguments)) {
             if (!in_array($session->get('role'), ['user', 'admin'])) {
-                return redirect()->back()->with('error', 'You do not have permission to access this page');
+                return redirect()->to('/')->with('error', 'You do not have permission to access this page');
             }
         }
     }

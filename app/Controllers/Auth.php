@@ -16,6 +16,17 @@ class Auth extends BaseController
     // Show login page
     public function login()
     {
+        $session = session();
+
+        // If already logged in, route to the proper dashboard instead
+        if ($session->get('logged_in')) {
+            if ($session->get('role') === 'admin') {
+                return redirect()->to('/admin');
+            }
+
+            return redirect()->to('/form');
+        }
+
         return view('auth/login');
     }
 

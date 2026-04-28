@@ -37,4 +37,3 @@ $routes->post('form', 'Form::save', ['filter' => 'auth']);
 $routes->post('form/delete', 'Form::delete', ['filter' => 'auth']);
 $routes->get('form/view/(:num)', 'Form::view/$1', ['filter' => 'auth']);
 $routes->get('form/print/(:num)', 'Form::print/$1', ['filter' => 'auth']);
-$routes->get('form/view/(:any)', 'Form::view/$1', ['filter' => 'auth']);
