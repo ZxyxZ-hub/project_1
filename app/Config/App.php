@@ -40,8 +40,8 @@ class App extends BaseConfig
      * something else. If you have configured your web server to remove this file
      * from your site URIs, set this variable to an empty string.
      */
-    // Keep index.php in URLs since mod_rewrite isn't enabled
-    public string $indexPage = 'index.php';
+    // Clean URLs: mod_rewrite is enabled in .htaccess for Apache/Laragon
+    public string $indexPage = '';
 
     /**
      * --------------------------------------------------------------------------

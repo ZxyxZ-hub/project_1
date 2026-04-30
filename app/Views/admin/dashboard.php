@@ -870,7 +870,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         async function approveUser() {
             const role = document.getElementById('approveRole').value;
             const form = document.getElementById('approveUserForm');
-            form.action = `<?= base_url('index.php/admin/approve-user/') ?>${currentUserId}`;
+            form.action = `<?= base_url('admin/approve-user/') ?>${currentUserId}`;
             document.getElementById('approveUserRole').value = role;
             form.submit();
         }
@@ -878,7 +878,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         async function denyUser(userId) {
             if (!confirm('Are you sure you want to deny this user?')) return;
             const form = document.getElementById('denyUserForm');
-            form.action = `<?= base_url('index.php/admin/deny-user/') ?>${userId}`;
+            form.action = `<?= base_url('admin/deny-user/') ?>${userId}`;
             form.submit();
         }
 
@@ -891,7 +891,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             }
 
             const form = document.getElementById('updateRoleForm');
-            form.action = `<?= base_url('index.php/admin/update-role/') ?>${currentUserId}`;
+            form.action = `<?= base_url('admin/update-role/') ?>${currentUserId}`;
             document.getElementById('updateRoleValue').value = role;
             form.submit();
         }
@@ -911,7 +911,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             }
 
             const form = document.getElementById('resetPasswordForm');
-            form.action = `<?= base_url('index.php/admin/reset-password/') ?>${currentUserId}`;
+            form.action = `<?= base_url('admin/reset-password/') ?>${currentUserId}`;
             document.getElementById('resetPasswordValue').value = newPassword;
             form.submit();
         }
@@ -920,7 +920,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
 
             const form = document.getElementById('deleteUserForm');
-            form.action = `<?= base_url('index.php/admin/delete-user/') ?>${userId}`;
+            form.action = `<?= base_url('admin/delete-user/') ?>${userId}`;
             form.submit();
         }
 

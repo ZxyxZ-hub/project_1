@@ -8,6 +8,11 @@ class CreateUsersTable extends Migration
 {
     public function up()
     {
+        // Check if table already exists (from manual create_db.php script)
+        if ($this->db->tableExists('users')) {
+            return;
+        }
+
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
@@ -51,16 +56,19 @@ class CreateUsersTable extends Migration
         $this->forge->addPrimaryKey('id');
         $this->forge->createTable('users');
 
-        // Create default admin user
-        $this->db->table('users')->insert([
-            'email' => 'admin',
-            'password' => password_hash('admin123', PASSWORD_BCRYPT),
-            'full_name' => 'Administrator',
-            'role' => 'admin',
-            'status' => 'approved',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
+        // Create default admin user if none exists
+        $result = $this->db->table('users')->where('email', 'admin')->first();
+        if (!$result) {
+            $this->db->table('users')->insert([
+                'email' => 'admin',
+                'password' => password_hash('admin123', PASSWORD_BCRYPT),
+                'full_name' => 'Administrator',
+                'role' => 'admin',
+                'status' => 'approved',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+        }
     }
 
     public function down()

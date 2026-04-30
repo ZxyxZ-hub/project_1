@@ -7,6 +7,64 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        gap: 12px;
+    }
+
+    .top-bar .logout-btn {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 150ms ease;
+    }
+
+    .top-bar .logout-btn:hover {
+        background: #b91c1c;
+    }
+
+    .top-bar .logout-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Logout button positioned at top-left */
+    .logout-form-top-left {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        margin: 0;
+    }
+
+    .logout-form-top-left .logout-btn {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 150ms ease;
+    }
+
+    .logout-form-top-left .logout-btn:hover {
+        background: #b91c1c;
+    }
+
+    .logout-form-top-left .logout-btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
         /* Back button for navigation */
         .btn-back {
             position: absolute;
@@ -481,7 +539,9 @@
     </style>
 
 <div class="page-wrap">
-    <button class="btn-back" type="button" onclick="history.back()">Close</button>
+    <form action="<?= base_url('auth/logout') ?>" method="POST" class="logout-form-top-left">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
     <?php
         $success = isset($success) ? $success : session()->getFlashdata('success');
         $error   = isset($error) ? $error : session()->getFlashdata('error');
@@ -515,32 +575,32 @@
             <form method="post" action="" class="modal-form">
                 <div class="form-group">
                     <label for="from_name">From Name</label>
-                    <input id="from_name" name="from_name" placeholder="Enter name">
+                    <input id="from_name" name="from_name" placeholder="Enter name" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="date_received">Date Received</label>
-                    <input id="date_received" type="date" name="date_received">
+                    <input id="date_received" type="date" name="date_received" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="origin">Origin</label>
-                    <input id="origin" name="origin" placeholder="Enter origin">
+                    <input id="origin" name="origin" placeholder="Enter origin" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="reference_no">Reference No</label>
-                    <input id="reference_no" name="reference_no" placeholder="Enter reference number">
+                    <input id="reference_no" name="reference_no" placeholder="Enter reference number" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="subject">Subject</label>
-                    <textarea id="subject" name="subject" placeholder="Enter subject"></textarea>
+                    <textarea id="subject" name="subject" placeholder="Enter subject" required></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="date_issued">Date Issued</label>
-                    <input id="date_issued" type="date" name="date_issued">
+                    <input id="date_issued" type="date" name="date_issued" required>
                 </div>
                 
                 <div class="form-group">
@@ -601,18 +661,26 @@ document.addEventListener('DOMContentLoaded', function () {
         formModal.classList.remove('show');
     });
 
-    // Close modal when clicking outside (on overlay)
-    formModal.addEventListener('click', function (e) {
-        if (e.target === formModal) {
-            formModal.classList.remove('show');
-        }
-    });
+    // Don't close modal when clicking outside - only close with X button
+
+    // Check if modal should be opened automatically (from list page)
+    if (sessionStorage.getItem('openFormModal') === 'true') {
+        formModal.classList.add('show');
+        sessionStorage.removeItem('openFormModal');
+    }
 
     // Handle form submission via AJAX to keep modal open
     var modalForm = document.querySelector('.modal-form');
+    var isSubmitting = false; // Flag to prevent duplicate submissions
     if (modalForm) {
         modalForm.addEventListener('submit', function (e) {
             e.preventDefault();
+            
+            // Prevent duplicate submissions
+            if (isSubmitting) {
+                return;
+            }
+            isSubmitting = true;
             
             var formData = new FormData(modalForm);
             var actionUrl = modalForm.getAttribute('action') || '';
@@ -651,6 +719,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (confirmDialog) {
                         confirmDialog.classList.add('show');
                     }
+                    
+                    // Reset submission flag
+                    isSubmitting = false;
                 }, timerDuration);
             })
             .catch(function(error) {
@@ -669,6 +740,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         shout.classList.remove('show');
                         setTimeout(function () { shout.style.display = 'none'; }, 250);
                     }
+                    
+                    // Reset submission flag
+                    isSubmitting = false;
                 }, 5000);
             });
         });
@@ -691,6 +765,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (firstInput) {
                 setTimeout(function() { firstInput.focus(); }, 200);
             }
+            // Reset submission flag
+            isSubmitting = false;
         });
     }
     
@@ -704,6 +780,8 @@ document.addEventListener('DOMContentLoaded', function () {
             formModal.classList.remove('show');
             // Hide the "Ready to create" section to show normal state
             createSection.classList.remove('hidden');
+            // Reset submission flag
+            isSubmitting = false;
         });
     }
 

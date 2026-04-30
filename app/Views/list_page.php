@@ -74,6 +74,20 @@
         box-shadow: 0 14px 34px rgba(220, 38, 38, 0.25) !important;
     }
 
+    /* Logout button positioned at top-left */
+    .logout-form-top-left {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        margin: 0;
+        z-index: 100;
+    }
+
+    .logout-form-top-left .btn {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+    }
+
     .card {
         background: #ffffff;
         border-radius: 12px;
@@ -368,6 +382,20 @@
         </div>
     </div>
 
+    <!-- Delete All Confirmation Dialog -->
+    <div id="deleteAllConfirm" class="delete-confirm-overlay">
+        <div class="delete-confirm-dialog">
+            <h3>Delete All Entries</h3>
+            <p>Are you sure you want to delete ALL entries? This action cannot be undone and is permanent.</p>
+            <div class="delete-confirm-actions">
+                <button type="button" class="btn-cancel" id="deleteAllCancel">Cancel</button>
+                <button type="button" class="btn-confirm" id="deleteAllConfirmBtn">Delete All</button>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="page-header">
         <h1>Saved Data</h1>
         <div class="header-actions">
@@ -377,6 +405,13 @@
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
                 Create
+            </button>
+            <button id="btnDeleteAll" class="btn danger" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Delete All
             </button>
         </div>
     </div>
@@ -427,11 +462,82 @@ document.addEventListener('DOMContentLoaded', function() {
     var deleteCancelItem = document.getElementById('deleteCancelItem');
     var deleteConfirmItem = document.getElementById('deleteConfirmItem');
     var btnCreateNew = document.getElementById('btnCreateNew');
+    var btnDeleteAll = document.getElementById('btnDeleteAll');
+    var deleteAllConfirm = document.getElementById('deleteAllConfirm');
+    var deleteAllCancel = document.getElementById('deleteAllCancel');
+    var deleteAllConfirmBtn = document.getElementById('deleteAllConfirmBtn');
 
     // Redirect to form creation page
     if (btnCreateNew) {
         btnCreateNew.addEventListener('click', function() {
+            // Set flag to open modal automatically on form page
+            sessionStorage.setItem('openFormModal', 'true');
             window.location.href = '<?= site_url('form') ?>';
+        });
+    }
+
+    // Delete All button handler
+    if (btnDeleteAll) {
+        btnDeleteAll.addEventListener('click', function() {
+            deleteAllConfirm.classList.add('show');
+        });
+    }
+
+    // Cancel delete all
+    if (deleteAllCancel) {
+        deleteAllCancel.addEventListener('click', function() {
+            deleteAllConfirm.classList.remove('show');
+        });
+    }
+
+    // Confirm delete all
+    if (deleteAllConfirmBtn) {
+        deleteAllConfirmBtn.addEventListener('click', function() {
+            var formData = new FormData();
+            formData.append('action', 'delete_all');
+
+            fetch('<?= site_url('form/delete') ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('Delete all response:', data);
+                if (data && data.success) {
+                    deleteAllConfirm.classList.remove('show');
+                    
+                    // Show success message
+                    var shout = document.getElementById('shout');
+                    if (shout) {
+                        shout.classList.remove('error');
+                        shout.classList.add('show');
+                        shout.querySelector('.shout-inner').textContent = 'All entries deleted successfully';
+                        shout.style.display = 'block';
+                        shout.style.background = '#16a34a';
+                        setTimeout(function() {
+                            shout.classList.remove('show');
+                            setTimeout(function() { 
+                                shout.style.display = 'none';
+                                // Reload page to show empty state
+                                location.reload();
+                            }, 300);
+                        }, 2000);
+                    }
+                } else {
+                    alert('Failed to delete all entries: ' + (data.message || 'Unknown error'));
+                    deleteAllConfirm.classList.remove('show');
+                }
+            })
+            .catch(function(error) {
+                console.error('Delete all error:', error);
+                alert('Error deleting all entries: ' + error.message);
+                deleteAllConfirm.classList.remove('show');
+            });
         });
     }
 

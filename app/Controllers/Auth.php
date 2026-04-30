@@ -13,13 +13,19 @@ class Auth extends BaseController
         $this->userModel = new UserModel();
     }
 
-    // Show login page
+    /**
+     * Show login page
+     * If user is already logged in, redirect to dashboard
+     * Otherwise, always show the login form (fresh start)
+     */
     public function login()
     {
         $session = session();
 
-        // If already logged in, route to the proper dashboard instead
-        if ($session->get('logged_in')) {
+        // Only redirect if BOTH conditions are true:
+        // 1. logged_in flag is set to true
+        // 2. user has a valid user_id
+        if ($session->get('logged_in') === true && $session->get('user_id')) {
             if ($session->get('role') === 'admin') {
                 return redirect()->to('/admin');
             }
@@ -27,10 +33,16 @@ class Auth extends BaseController
             return redirect()->to('/form');
         }
 
+        // Fresh start or session expired - always show login form
         return view('auth/login');
     }
 
-    // Handle login form submission
+    /**
+     * Handle login form submission
+     * Validates email and password against database
+     * Checks if user is approved
+     * Creates session and redirects to dashboard
+     */
     public function loginSubmit()
     {
         $username = $this->request->getPost('email');
@@ -50,7 +62,7 @@ class Auth extends BaseController
             return redirect()->back()->with('error', 'Your account is pending approval');
         }
 
-        // Set session
+        // Set session with user data
         session()->set([
             'user_id' => $user['id'],
             'username' => $user['email'],
@@ -59,7 +71,7 @@ class Auth extends BaseController
             'logged_in' => true
         ]);
 
-        // Redirect based on role
+        // Redirect based on user role
         if ($user['role'] === 'admin') {
             return redirect()->to('/admin');
         }
@@ -67,13 +79,19 @@ class Auth extends BaseController
         return redirect()->to('/form');
     }
 
-    // Show signup page
+    /**
+     * Show signup page for new user registration
+     */
     public function signup()
     {
         return view('auth/signup');
     }
 
-    // Handle signup form submission
+    /**
+     * Handle signup form submission
+     * Validates input and creates pending user account
+     * User must be approved by admin before login
+     */
     public function signupSubmit()
     {
         $rules = [
@@ -104,7 +122,10 @@ class Auth extends BaseController
         return redirect()->back()->with('error', 'Failed to create account');
     }
 
-    // Handle logout
+    /**
+     * Handle logout request
+     * Destroys session and redirects to login page
+     */
     public function logout()
     {
         session()->destroy();

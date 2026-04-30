@@ -1,21 +1,10 @@
 <?php
-// Set environment
-define('ENVIRONMENT', 'development');
+// Bootstrap CodeIgniter for CLI and create users table safely (no duplicates)
+require_once __DIR__ . '/../system/util_bootstrap.php';
 
-// Load CodeIgniter properly
-require_once __DIR__ . '/vendor/autoload.php';
-// Ensure Paths is available before bootstrapping CodeIgniter
-require_once __DIR__ . '/app/Config/Paths.php';
-require_once __DIR__ . '/app/Config/App.php';
-require_once __DIR__ . '/app/Config/Services.php';
-
-$config = new \Config\App();
-$paths = new \Config\Paths();
-$app = new \CodeIgniter\CodeIgniter($config, $paths);
 $db = \Config\Database::connect();
-$forge = $db->forge();
+$forge = \Config\Database::forge();
 
-// Create users table if it doesn't exist
 if (!$db->tableExists('users')) {
     $forge->addField([
         'id' => [
@@ -64,7 +53,6 @@ if (!$db->tableExists('users')) {
     echo "✓ Users table already exists\n";
 }
 
-// Insert admin user if not exists
 $builder = $db->table('users');
 $admin = $builder->where('email', 'admin')->get()->getRow();
 

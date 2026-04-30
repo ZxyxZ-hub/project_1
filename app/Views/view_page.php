@@ -189,15 +189,68 @@
 	box-shadow: 0 14px 34px rgba(247, 11, 11, 0.22);
 }
 
+.btn-logout{
+	background:#dc2626;
+	color:#fff;
+	padding:12px 24px;
+	border:none;
+	cursor:pointer;
+	border-radius:8px;
+	font-weight:700;
+	font-size:14px;
+	box-shadow: 0 8px 20px rgba(220, 38, 38, 0.18);
+	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+	display:inline-flex;
+	align-items:center;
+	gap:8px;
+}
+
+.btn-logout:hover{
+	transform: translateY(-4px) scale(1.02);
+	box-shadow: 0 14px 34px rgba(220, 38, 38, 0.22);
+}
+
+.btn-close:hover{
+	transform: translateY(-4px) scale(1.02);
+	box-shadow: 0 14px 34px rgba(247, 11, 11, 0.22);
+}
+
+/* Back button positioned at top-left */
+.btn-back {
+	position: absolute;
+	top: 18px;
+	left: 18px;
+	background: #6b7280;
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 8px;
+	font-weight: 600;
+	cursor: pointer;
+	font-size: 0.9rem;
+	transition: background 150ms ease;
+	z-index: 100;
+}
+
+.btn-back:hover {
+	background: #4b5563;
+}
+
+/* Print button positioned at top-right */
+.btn-print-top {
+	position: absolute;
+	top: 18px;
+	right: 18px;
+	z-index: 100;
+}
+
 </style>
 
 
 <div class="db-view">
-	<div class="top-controls">
-		<button class="btn-close" type="button" onclick="history.back()">← Back</button>
-		<?php $baseForPrint = preg_replace('#/view/[^/]+$#', '', rtrim(current_url(), '/')); ?>
-		<a class="btn-print" href="<?= $baseForPrint . '/print/' . $form['id'] ?>">Print</a>
-	</div>
+	<button onclick="window.history.back()" class="btn-back">Back</button>
+	<?php $baseForPrint = preg_replace('#/view/[^/]+$#', '', rtrim(current_url(), '/')); ?>
+	<a class="btn-print btn-print-top" href="<?= $baseForPrint . '/print/' . $form['id'] ?>">Print</a>
 
 	<div class="header-section">
 		<p class="org-name">Professional Regulation Commission</p>

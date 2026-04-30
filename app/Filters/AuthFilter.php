@@ -12,23 +12,24 @@ class AuthFilter implements FilterInterface
     {
         $session = session();
         
-        // Check if user is logged in
-        if (!$session->get('logged_in')) {
+        // Check if user is logged in with valid session
+        // Require BOTH logged_in flag AND user_id to prevent session hijacking
+        if (!$session->get('logged_in') || !$session->get('user_id')) {
             return redirect()->to(base_url('auth/login'));
         }
 
         // If route requires admin role, check it
         if ($arguments && in_array('admin', $arguments)) {
             if ($session->get('role') !== 'admin') {
-                // Use a safe fallback instead of redirect()->back() to avoid loops
-                return redirect()->to('/')->with('error', 'You do not have permission to access this page');
+                // Redirect to login instead of showing error
+                return redirect()->to('/auth/login')->with('error', 'You do not have permission to access this page');
             }
         }
 
         // If route requires user role, check it
         if ($arguments && in_array('user', $arguments)) {
             if (!in_array($session->get('role'), ['user', 'admin'])) {
-                return redirect()->to('/')->with('error', 'You do not have permission to access this page');
+                return redirect()->to('/auth/login')->with('error', 'You do not have permission to access this page');
             }
         }
     }
