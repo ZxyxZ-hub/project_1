@@ -1,280 +1,126 @@
 <style>
-/* Container */
-.db-view{
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	max-width:900px;
-	margin:20px auto;
-	background:#fff;
-	padding:18px;
-	border:3px solid #666;
-	box-sizing:border-box;
-}
+html,body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0}
+body{position:relative;padding-bottom:60px}
+.btn-back-outer{position:fixed;bottom:12px;left:12px;z-index:1000}
+.btn-print-outer{position:fixed;bottom:12px;right:12px;z-index:1000}
+.btn-back,.btn-print{padding:10px 18px;border-radius:6px;border:none;cursor:pointer;font-weight:700;font-size:14px;transition:all 150ms ease;display:inline-block;text-decoration:none}
+.btn-back{background:#dc2626;color:#fff}
+.btn-back:hover{background:#b91c1c;transform:translateY(-2px)}
+.btn-print{background:#21aef5;color:#000}
+.btn-print:hover{background:#1a8dd0;transform:translateY(-2px)}
+.form-wrapper{max-width:920px;margin:18px auto;background:#fff;position:relative}
 
-.db-view .top-controls{
-	display:flex;
-	justify-content:space-between;
-	align-items:center;
-	gap:12px;
-	margin-bottom:24px;
-}
+/* Modular Containers */
+.form-container{border:1px solid #000;margin-bottom:0}
+.container-1{display:flex;align-items:flex-start;gap:20px;padding:14px}
+.logo-section{width:100px;text-align:center;flex-shrink:0}
+.logo-section img{width:80px;height:80px;margin-bottom:8px;object-fit:contain}
+.logo-section .director-name{font-size:11px;font-weight:700;line-height:1.2;white-space:normal}
+.header-section{flex:1;display:flex;flex-direction:column;justify-content:flex-start;text-align:center;padding-top:4px}
+.header-section .org-name{font-weight:700;font-size:14px;margin:0 0 2px 0}
+.header-section .office-name{font-size:15px;font-weight:700;margin:8px 0 0 0}
 
-/* Header section */
-.db-view .header-section{
-	text-align:center;
-	margin-bottom:20px;
-	border-bottom:2px solid #666;
-	padding-bottom:12px;
-}
+/* Container 2: Date Received, Origin, Reference */
+.container-2{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #000}
+.field-group{border-right:1px solid #000;padding:10px;display:flex;flex-direction:column;min-height:60px}
+.field-group:last-child{border-right:none}
+.field-label{font-weight:700;font-size:14px;margin-bottom:6px;text-align:left}
+.field-data{flex:1;border:1px solid #000;background:#fff;padding:8px;font-size:14px;min-height:35px;word-wrap:break-word;overflow-wrap:break-word;white-space:pre-wrap;text-align:center;display:flex;align-items:center;justify-content:center}
 
-.db-view .header-section .org-name{
-	font-weight:700;
-	font-size:1.1rem;
-	margin:0 0 4px 0;
-}
+/* Container 3: Subject (full width, large) */
+.container-3{border-top:1px solid #000;padding:10px;display:flex;flex-direction:column;min-height:220px}
+.subject-label{font-weight:700;font-size:14px;margin-bottom:6px;text-align:left}
+.subject-data{flex:1;border:1px solid #000;background:#fff;padding:8px;font-size:14px;word-wrap:break-word;overflow-wrap:break-word;white-space:pre-wrap;text-align:center;display:flex;align-items:center;justify-content:center}
 
-.db-view .header-section .office-name{
-	font-size:0.95rem;
-	margin:0 0 8px 0;
-}
+/* Container 4: Date Issued (3 columns like container 2) */
+.container-4{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #000}
+.date-issued-group{border-right:1px solid #000;padding:10px;display:flex;flex-direction:column;min-height:60px}
+.date-issued-group:last-child{border-right:none}
+.date-issued-label{font-weight:700;font-size:14px;margin-bottom:6px;text-align:left}
+.date-issued-data{flex:1;border:1px solid #000;background:#fff;padding:8px;font-size:14px;min-height:35px;word-wrap:break-word;overflow-wrap:break-word;white-space:pre-wrap;text-align:center;display:flex;align-items:center;justify-content:center}
 
-.db-view .header-section .director-info{
-	font-size:0.9rem;
-	margin:0;
-}
+/* Container 5: Instructions/Remarks + Target Date */
+.container-5{border-top:1px solid #000;display:grid;grid-template-columns:2fr 1fr;gap:0}
+.instructions-part{padding:10px;border-right:1px solid #000;display:flex;flex-direction:column;min-height:200px}
+.instructions-label{font-weight:700;font-size:14px;margin-bottom:6px;text-align:center}
+.instructions-data{flex:1;border:1px solid #000;background:#fff;padding:8px;font-size:14px;word-wrap:break-word;overflow-wrap:break-word;white-space:pre-wrap;text-align:center;display:flex;align-items:center;justify-content:center}
+.target-date-part{padding:10px;display:flex;flex-direction:column;min-height:200px;justify-content:flex-end}
+.target-date-label{font-weight:700;font-size:14px;margin-bottom:6px;text-align:center}
+.target-date-data{border:1px solid #000;background:#fff;padding:8px;font-size:14px;min-height:140px;word-wrap:break-word;text-align:center;display:flex;align-items:center;justify-content:center}
 
-/* Info row (Date Received, Origin, Reference) */
-.info-row{
-	display:grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	gap:12px;
-	margin-bottom:12px;
-}
-
-.info-row p{
-	margin:0;
-	padding:12px;
-	border:2px solid #666;
-	background:#fff;
-	box-sizing:border-box;
-	font-size:0.9rem;
-	min-height:50px;
-	display:flex;
-	align-items:center;
-}
-
-.info-row p::before{
-	font-weight:700;
-	display:block;
-	width:100%;
-}
-
-.info-row .date-received::before{ content: "Date Received:"; }
-.info-row .origin::before{ content: "Origin/Source:"; }
-.info-row .reference::before{ content: "Reference No.:"; }
-
-/* From row (above the grid) */
-.from-row{ margin-bottom:12px; }
-.from-row .from-field{
-	padding:12px;
-	border:2px solid #666;
-	min-height:40px;
-	box-sizing:border-box;
-	font-weight:700;
-}
-
-.from-row .from-field::before{ content: "From: "; font-weight:700; margin-right:8px; }
-
-/* Field boxes */
-.db-view p{
-	margin:0;
-	padding:12px;
-	border:2px solid #666;
-	background:#fff;
-	box-sizing:border-box;
-	word-wrap:break-word;
-	overflow-wrap:break-word;
-	word-break:break-word;
-	hyphens:auto;
-	min-height:40px;
-}
-
-/* Label prefix styling */
-.db-view p::before{
-	font-weight:700;
-	margin-right:8px;
-	display:inline-block;
-}
-
-/* Subject field - full width */
-.subject-section{
-	display:grid;
-	grid-template-columns: 1fr 1fr;
-	gap:12px;
-	margin-bottom:12px;
-}
-
-.db-view p.subject{
-	grid-column: 1 / -1;
-	min-height:100px;
-	display:block;
-}
-
-.db-view p.subject::before{ content: "Subject: "; }
-
-.db-view p.date-issued{
-	min-height:50px;
-}
-
-.db-view p.date-issued::before{ content: "Date Issued:"; }
-
-/* Bottom section - Instructions and Target Date */
-.bottom-section{
-	display:grid;
-	grid-template-columns: 1fr 1fr;
-	gap:12px;
-}
-
-.db-view p.instructions{
-	min-height:120px;
-	display:block;
-}
-
-.db-view p.instructions::before{ content: "Instructions/Remarks: "; display:block; margin-bottom:8px; }
-
-.db-view p.target-date{
-	min-height:120px;
-	display:block;
-}
-
-.db-view p.target-date::before{ content: "Target Date: "; display:block; margin-bottom:8px; }
-
-/* Buttons */
-.btn-print{
-	background: #21aef5ff;
-	color:#000;
-	padding:12px 24px;
-	border:none;
-	font-size:14px;
-	font-weight:700;
-	cursor:pointer;
-	border-radius:8px;
-	text-decoration:none;
-	display:inline-flex;
-	align-items:center;
-	gap:8px;
-	box-shadow: 0 8px 20px rgba(251, 191, 36, 0.18);
-	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-}
-
-.btn-print:hover{
-	transform: translateY(-4px) scale(1.02);
-	box-shadow: 0 14px 34px rgba(251, 191, 36, 0.22);
-}
-
-.btn-close{
-	background:#f70b0b;
-	color:#fff;
-	padding:12px 24px;
-	border:none;
-	cursor:pointer;
-	border-radius:8px;
-	font-weight:700;
-	font-size:14px;
-	box-shadow: 0 8px 20px rgba(247, 11, 11, 0.18);
-	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-}
-
-.btn-close:hover{
-	transform: translateY(-4px) scale(1.02);
-	box-shadow: 0 14px 34px rgba(247, 11, 11, 0.22);
-}
-
-.btn-logout{
-	background:#dc2626;
-	color:#fff;
-	padding:12px 24px;
-	border:none;
-	cursor:pointer;
-	border-radius:8px;
-	font-weight:700;
-	font-size:14px;
-	box-shadow: 0 8px 20px rgba(220, 38, 38, 0.18);
-	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-	display:inline-flex;
-	align-items:center;
-	gap:8px;
-}
-
-.btn-logout:hover{
-	transform: translateY(-4px) scale(1.02);
-	box-shadow: 0 14px 34px rgba(220, 38, 38, 0.22);
-}
-
-.btn-close:hover{
-	transform: translateY(-4px) scale(1.02);
-	box-shadow: 0 14px 34px rgba(247, 11, 11, 0.22);
-}
-
-/* Back button positioned at top-left */
-.btn-back {
-	position: absolute;
-	top: 18px;
-	left: 18px;
-	background: #6b7280;
-	color: white;
-	border: none;
-	padding: 8px 16px;
-	border-radius: 8px;
-	font-weight: 600;
-	cursor: pointer;
-	font-size: 0.9rem;
-	transition: background 150ms ease;
-	z-index: 100;
-}
-
-.btn-back:hover {
-	background: #4b5563;
-}
-
-/* Print button positioned at top-right */
-.btn-print-top {
-	position: absolute;
-	top: 18px;
-	right: 18px;
-	z-index: 100;
-}
-
+@media print{.btn-back-outer,.btn-print-outer{display:none}body{margin:0;padding:0;padding-top:0}.form-wrapper{margin:0;max-width:100%}}
 </style>
 
 
-<div class="db-view">
-	<button onclick="window.history.back()" class="btn-back">Back</button>
-	<?php $baseForPrint = preg_replace('#/view/[^/]+$#', '', rtrim(current_url(), '/')); ?>
-	<a class="btn-print btn-print-top" href="<?= $baseForPrint . '/print/' . $form['id'] ?>">Print</a>
+<div class="btn-back-outer">
+	<button class="btn-back" onclick="window.history.back()">Back</button>
+</div>
 
-	<div class="header-section">
-		<p class="org-name">Professional Regulation Commission</p>
-		<p class="office-name">Davao Regional Office</p>
-		<p class="director-info">Director: Raquel R. Abanites</p>
+<?php $baseForPrint = preg_replace('#/view/[^/]+$#', '', rtrim(current_url(), '/')); ?>
+<div class="btn-print-outer">
+	<a class="btn-print" href="<?= $baseForPrint . '/print/' . $form['id'] ?>">Print</a>
+</div>
+
+<div class="form-wrapper">
+	<!-- Container 1: Logo + Director + PRC Header -->
+	<div class="form-container container-1">
+		<div class="logo-section">
+			<img src="<?= base_url('images/logo.png') ?>" alt="PRC Logo">
+			<div class="director-name">From: Director Raquel A. Abrantes</div>
+		</div>
+		<div class="header-section">
+			<p class="org-name">Professional Regulation Commission</p>
+			<p class="office-name">Davao Regional Office</p>
+		</div>
 	</div>
 
-	<div class="info-row">
-		<p class="date-received"><?= $form['date_received'] ?></p>
-		<p class="origin"><?= $form['origin'] ?></p>
-		<p class="reference"><?= $form['reference_no'] ?></p>
+	<!-- Container 2: Date Received | Origin/Source | Reference No. -->
+	<div class="form-container container-2">
+		<div class="field-group">
+			<span class="field-label">Date Received</span>
+			<div class="field-data"><?= nl2br(htmlspecialchars($form['date_received'] ?? '')) ?></div>
+		</div>
+		<div class="field-group">
+			<span class="field-label">Origin/Source</span>
+			<div class="field-data"><?= nl2br(htmlspecialchars($form['origin'] ?? '')) ?></div>
+		</div>
+		<div class="field-group">
+			<span class="field-label">Reference No.</span>
+			<div class="field-data"><?= nl2br(htmlspecialchars($form['reference_no'] ?? '')) ?></div>
+		</div>
 	</div>
 
-	<div class="from-row">
-		<p class="from-field"><?= $form['from_name'] ?></p>
+	<!-- Container 3: Subject (Full Width) -->
+	<div class="form-container container-3">
+		<span class="subject-label">Subject</span>
+		<div class="subject-data"><?= nl2br(htmlspecialchars($form['subject'] ?? '')) ?></div>
 	</div>
 
-	<div class="subject-section">
-		<p class="subject"><?= $form['subject'] ?></p>
-		<p class="date-issued"><?= isset($form['date_issued']) ? $form['date_issued'] : '' ?></p>
+	<!-- Container 4: Date Issued (3 columns) -->
+	<div class="form-container container-4">
+		<div class="date-issued-group">
+			<span class="date-issued-label">Date Issued</span>
+			<div class="date-issued-data"><?= nl2br(htmlspecialchars($form['date_issued'] ?? '')) ?></div>
+		</div>
+		<div class="date-issued-group">
+			<span class="date-issued-label">Status</span>
+			<div class="date-issued-data"></div>
+		</div>
+		<div class="date-issued-group">
+			<span class="date-issued-label">Notes</span>
+			<div class="date-issued-data"></div>
+		</div>
 	</div>
 
-	<div class="bottom-section">
-		<p class="instructions"><?= $form['instructions'] ?></p>
-		<p class="target-date"><?= isset($form['target_date']) ? $form['target_date'] : '' ?></p>
+	<!-- Container 5: Instructions/Remarks + Target Date -->
+	<div class="form-container container-5">
+		<div class="instructions-part">
+			<span class="instructions-label">Instructions/Remarks</span>
+			<div class="instructions-data"><?= nl2br(htmlspecialchars($form['instructions'] ?? '')) ?></div>
+		</div>
+		<div class="target-date-part">
+			<span class="target-date-label">Target Date</span>
+			<div class="target-date-data"><?= nl2br(htmlspecialchars($form['target_date'] ?? '')) ?></div>
+		</div>
 	</div>
 </div>
