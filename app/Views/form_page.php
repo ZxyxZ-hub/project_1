@@ -826,9 +826,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     var items = data.forms;
                     var html = '';
                     items.forEach(function(item) {
+                        var from = item.from_name || '--Blank--';
+                        var subject = item.subject || '--Blank--';
+                        var truncated = truncateText(subject, 60);
+
                         html += '<div class="recent-item">' +
-                            '<strong>' + escapeHtml(item.from_name) + '</strong>' +
-                            '<small>' + escapeHtml(item.date_received) + ' — ' + escapeHtml(item.subject) + '</small>' +
+                            '<div><strong>From:</strong> ' + escapeHtml(from) + '</div>' +
+                            '<div><strong>Subject:</strong> <small title="' + escapeHtml(subject) + '">' + escapeHtml(truncated) + '</small></div>' +
                             '</div>';
                     });
                     container.innerHTML = html;
@@ -850,6 +854,19 @@ document.addEventListener('DOMContentLoaded', function () {
         var div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // Helper to truncate long text nicely (avoid cutting mid-word)
+    function truncateText(text, maxLen) {
+        if (!text) return '';
+        text = text.toString();
+        if (text.length <= maxLen) return text;
+        var truncated = text.substr(0, maxLen);
+        var lastSpace = truncated.lastIndexOf(' ');
+        if (lastSpace > Math.floor(maxLen * 0.4)) {
+            truncated = truncated.substr(0, lastSpace);
+        }
+        return truncated.trim() + '...';
     }
 
     // Load recent items on page load

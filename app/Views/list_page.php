@@ -420,15 +420,28 @@
         <?php if (!empty($forms)): ?>
             <div class="saved-list">
                 <?php foreach($forms as $form): ?>
-                    <div class="saved-item">
-                        <div class="saved-item-info">
-                            <strong><?= esc($form['from_name']) ?></strong>
-                            <div class="meta">
-                                <?= esc($form['subject']) ?> | 
-                                <?= esc($form['date_received']) ?>
-                            </div>
+                    <div class="recent-item" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; border: 3px solid #000; border-radius: 8px; padding: 18px; background: #ffffff;">
+                        <div>
+                            <?php
+                                $from = !empty($form['from_name']) ? $form['from_name'] : '--Blank--';
+                                $subjectFull = !empty($form['subject']) ? $form['subject'] : '--Blank--';
+                                // Truncate helper (avoid cutting mid-word)
+                                $max = 60;
+                                if (mb_strlen($subjectFull) <= $max) {
+                                    $subjectTrunc = esc($subjectFull);
+                                } else {
+                                    $part = mb_substr($subjectFull, 0, $max);
+                                    $lastSpace = mb_strrpos($part, ' ');
+                                    if ($lastSpace !== false && $lastSpace > intval($max * 0.4)) {
+                                        $part = mb_substr($part, 0, $lastSpace);
+                                    }
+                                    $subjectTrunc = esc($part) . '...';
+                                }
+                            ?>
+                            <div><strong>From:</strong> <?= esc($from) ?></div>
+                            <div><strong>Subject:</strong> <small title="<?= esc($subjectFull) ?>"><?= $subjectTrunc ?></small></div>
                         </div>
-                        <div class="saved-item-actions">
+                        <div style="display: flex; gap: 6px; flex-shrink: 0;">
                             <a href="<?= site_url('form/view/' . $form['id']) ?>" class="btn-view-item" style="text-decoration: none;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
