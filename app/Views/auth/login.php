@@ -294,7 +294,7 @@ $session = session();
         </form>
 
         <div class="signup-link">
-            Don't have an account? <a href="<?= base_url('auth/signup') ?>">Sign up here</a>
+            Don't have an account? <a href="<?= base_url('auth/signup') ?>">Create Account</a>
         </div>
     </div>
 
