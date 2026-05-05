@@ -7,18 +7,27 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Back button for navigation */
+    /* Back button for navigation (keeps original red color and position,
+       but sized and aligned to match header action buttons) */
     .btn-back {
         position: absolute;
         top: 18px;
         left: 18px;
         background: rgb(247, 11, 11);
-        color: rgb(255, 255, 255);
-        border: 2px solid rgb(247, 11, 11);
-        padding: 8px 12px;
-        border-radius: 8px;
+        color: #fff;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 10px;
         font-weight: 700;
         cursor: pointer;
+        box-shadow: 0 8px 20px rgba(220,38,38,0.18);
+        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        text-decoration: none;
     }
 
     .page-header {
@@ -364,7 +373,7 @@
 </style>
 
 <div class="page-wrap">
-    <button class="btn-back" type="button" onclick="history.back()">← Back</button>
+    <button class="btn-back" type="button" onclick="history.back()">Back</button>
 
     <div id="shout" class="shout" data-message="" aria-hidden="true" style="display:none">
         <div class="shout-inner"></div>
