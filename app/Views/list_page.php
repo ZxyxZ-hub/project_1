@@ -1,58 +1,94 @@
+<link rel="stylesheet" href="<?= base_url('css/shared-styles.css') ?>">
 <style>
-    /* Buttons + layout (inline) */
-    .page-wrap {
-        max-width: 980px;
-        margin: 18px auto;
-        padding: 18px;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { 
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, rgb(231, 233, 235) 0%, rgb(171, 203, 207) 100%);
+        color: #000;
     }
 
-    /* Back button for navigation (keeps original red color and position,
-       but sized and aligned to match header action buttons) */
-    .btn-back {
-        position: absolute;
-        top: 18px;
-        left: 18px;
-        background: rgb(247, 11, 11);
-        color: #fff;
-        border: none;
-        padding: 14px 28px;
-        border-radius: 10px;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 8px 20px rgba(220,38,38,0.18);
-        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-        font-size: 1.05rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        white-space: nowrap;
-        text-decoration: none;
-    }
-
+    /* Header with Navigation */
     .page-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 16px 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 28px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    .page-header h1 {
+    .page-header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .page-header-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: contain;
+    }
+
+    .page-header-title h1 {
         margin: 0;
-        color: #000;
+        font-size: 1.5rem;
         font-weight: 700;
-        font-size: 1.8rem;
+        color: #000;
+    }
+
+    /* Page Layout */
+    .page-wrap {
+        max-width: 1100px;
+        margin: 32px auto;
+        padding: 0 20px;
+    }
+
+    /* Floating side actions */
+    .side-actions{position:fixed;left:0;top:0;width:80px;height:100vh;z-index:1100;display:flex;align-items:flex-start;justify-content:flex-start;padding-top:20px;cursor:pointer}
+    .side-indicator{position:fixed;left:12px;top:24px;font-size:34px;line-height:1;color:#dc2626;font-weight:900;opacity:0.9;transition:all 200ms ease;pointer-events:none;text-shadow:0 2px 6px rgba(0,0,0,0.18)}
+    .side-actions:hover .side-indicator{opacity:1;left:16px}
+    .side-actions .side-panel{position:fixed;left:0;top:20px;transform:translateX(-8px);display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border-radius:0 8px 8px 0;opacity:0;transition:opacity .18s ease,transform .18s ease;pointer-events:none;box-shadow:0 12px 30px rgba(0,0,0,0.12);z-index:1200}
+    .side-actions.show .side-panel{opacity:1;transform:translateX(0);pointer-events:auto}
+    .side-actions .btn{padding:12px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:0.95rem;display:inline-flex;align-items:center;gap:8px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,0.08);min-width:140px;justify-content:center;transition:all 150ms ease;white-space:nowrap}
+    .side-actions .btn-back{background:#dc2626;color:#fff}
+    .side-actions .btn-back:hover{background:#b91c1c;transform:translateY(-2px)}
+
+    /* overlay that blurs & darkens main content when panel open */
+    .side-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.18);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:1000}
+    .side-actions.show ~ .side-overlay{opacity:1;pointer-events:auto}
+
+    /* Page Header Section */
+    .page-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+
+    .page-section-header h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #000;
     }
 
     .header-actions {
         display: flex;
-        gap: 8px;
+        gap: 12px;
         align-items: center;
+        flex-wrap: wrap;
     }
 
-    .btn {
-        background: #21aef5ff;
+    /* Buttons */
+    .btn, button {
+        background: #21aef5;
         color: #fff;
         border: none;
         padding: 12px 24px;
@@ -60,7 +96,7 @@
         font-weight: 700;
         cursor: pointer;
         box-shadow: 0 8px 20px rgba(33,174,245,0.18);
-        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        transition: all 180ms ease;
         font-size: 1rem;
         display: flex;
         align-items: center;
@@ -68,9 +104,10 @@
         white-space: nowrap;
     }
 
-    .btn:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 14px 34px rgba(33,174,245,0.22);
+    .btn:hover, button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(33,174,245,0.28);
+        filter: brightness(1.05);
     }
 
     .btn.danger {
@@ -80,70 +117,78 @@
     }
 
     .btn.danger:hover {
-        box-shadow: 0 14px 34px rgba(220, 38, 38, 0.25) !important;
+        box-shadow: 0 12px 30px rgba(220, 38, 38, 0.28) !important;
     }
 
-    /* Logout button positioned at top-left */
-    .logout-form-top-left {
-        position: absolute;
-        top: 18px;
-        left: 18px;
-        margin: 0;
-        z-index: 100;
-    }
-
-    .logout-form-top-left .btn {
-        padding: 8px 14px;
-        font-size: 0.9rem;
-    }
-
+    /* Card Container */
     .card {
         background: #ffffff;
         border-radius: 12px;
-        padding: 18px;
-        box-shadow: 0 8px 30px rgba(7,12,18,0.06);
-        margin-bottom: 18px;
+        padding: 28px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: all 200ms ease;
+    }
+
+    .card:hover {
+        border-color: #21aef5;
+        box-shadow: 0 8px 24px rgba(33,174,245,0.08);
     }
 
     /* Saved items list */
     .saved-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
     }
 
-    .saved-item {
+    .recent-item {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        padding: 14px;
-        border-radius: 8px;
-        border: 3px solid #666;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
         background: #ffffff;
+        transition: all 200ms ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
-    .saved-item-info {
+    .recent-item:hover {
+        border-color: #21aef5;
+        box-shadow: 0 8px 20px rgba(33,174,245,0.1);
+    }
+
+    .recent-item > div:first-child {
         flex: 1;
         min-width: 0;
     }
 
-    .saved-item strong {
+    .recent-item strong {
         color: #000;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 0.95rem;
         display: block;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
 
-    .saved-item .meta {
+    .recent-item small {
         color: #666;
         font-size: 0.85rem;
     }
 
-    .saved-item-actions {
+    .recent-item div {
         display: flex;
         gap: 8px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .recent-item-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
     }
 
     .btn-view-item {
@@ -151,42 +196,42 @@
         color: #000 !important;
         border: none !important;
         padding: 8px 14px !important;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         font-weight: 700 !important;
         cursor: pointer !important;
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
         display: inline-flex !important;
         align-items: center !important;
         gap: 6px !important;
-        box-shadow: 0 6px 16px rgba(251, 191, 36, 0.15) !important;
-        transition: transform 180ms ease, box-shadow 180ms ease !important;
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.15) !important;
+        transition: all 180ms ease !important;
+        text-decoration: none !important;
     }
 
     .btn-view-item:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 10px 24px rgba(251, 191, 36, 0.25) !important;
+        box-shadow: 0 8px 20px rgba(251, 191, 36, 0.25) !important;
     }
 
-    /* Delete Button Styles */
     .btn-delete-item {
         background: #dc2626 !important;
         color: #fff !important;
         border: none !important;
         padding: 8px 12px !important;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         font-weight: 700 !important;
         cursor: pointer !important;
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
         display: inline-flex !important;
         align-items: center !important;
         gap: 6px !important;
-        box-shadow: 0 6px 16px rgba(220, 38, 38, 0.15) !important;
-        transition: transform 180ms ease, box-shadow 180ms ease !important;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15) !important;
+        transition: all 180ms ease !important;
     }
 
     .btn-delete-item:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 10px 24px rgba(220, 38, 38, 0.25) !important;
+        box-shadow: 0 8px 20px rgba(220, 38, 38, 0.25) !important;
     }
 
     /* Delete Confirmation Dialog */
@@ -201,6 +246,7 @@
         align-items: center;
         justify-content: center;
         z-index: 10001;
+        backdrop-filter: blur(2px);
     }
 
     .delete-confirm-overlay.show {
@@ -210,25 +256,25 @@
     .delete-confirm-dialog {
         background: #ffffff;
         border-radius: 16px;
-        padding: 28px;
-        max-width: 400px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        padding: 32px;
+        max-width: 420px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
         text-align: center;
-        animation: slideUp 0.4s ease;
+        animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
     }
 
     .delete-confirm-dialog h3 {
-        margin-top: 0;
+        margin: 0 0 12px 0;
         color: #dc2626;
         font-size: 1.2rem;
         font-weight: 700;
     }
 
     .delete-confirm-dialog p {
-        color: #000;
-        margin-bottom: 20px;
+        color: #666;
+        margin-bottom: 24px;
         font-size: 0.95rem;
-        font-weight: 600;
+        line-height: 1.6;
     }
 
     .delete-confirm-actions {
@@ -238,13 +284,14 @@
     }
 
     .delete-confirm-actions button {
-        padding: 10px 20px;
-        border-radius: 8px;
+        padding: 10px 24px;
+        border-radius: 10px;
         border: none;
         font-weight: 700;
         cursor: pointer;
         transition: all 180ms ease;
         font-size: 0.95rem;
+        flex: 1;
     }
 
     .delete-confirm-actions .btn-confirm {
@@ -255,24 +302,25 @@
 
     .delete-confirm-actions .btn-confirm:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 30px rgba(220, 38, 38, 0.25);
+        box-shadow: 0 12px 30px rgba(220, 38, 38, 0.28);
     }
 
     .delete-confirm-actions .btn-cancel {
         background: #f3f4f6;
         color: #333;
-        border: 2px solid #d1d5db;
+        border: 2px solid #e5e7eb;
     }
 
     .delete-confirm-actions .btn-cancel:hover {
         background: #e5e7eb;
-        border-color: #b4b8bf;
+        border-color: #d1d5db;
+        transform: translateY(-2px);
     }
 
     @keyframes slideUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
         }
         to {
             opacity: 1;
@@ -283,47 +331,51 @@
     /* Toast notification */
     .shout {
         position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-10px);
-        background: #16a34a;
+        top: 24px;
+        right: 24px;
+        background: #10b981;
         color: #fff;
-        padding: 12px 18px;
+        padding: 14px 20px;
         border-radius: 10px;
-        box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+        box-shadow: 0 12px 36px rgba(16, 185, 129, 0.25);
         z-index: 99999;
         opacity: 0;
-        transition: transform .3s ease, opacity .3s ease;
+        transition: all 0.3s ease;
         text-align: center;
-        font-size: 1rem;
-        animation: slideDown 0.4s ease;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transform: translateX(400px);
+        animation: slideInRight 0.4s ease;
     }
 
     .shout.show {
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(0);
         opacity: 1;
     }
 
-    .shout-inner {
-        font-weight: 700;
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(400px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     .shout.error {
         background: #dc2626;
-    }
-
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        box-shadow: 0 12px 36px rgba(220, 38, 38, 0.25);
     }
 
     /* Empty state */
     .empty-state {
-        padding: 40px;
+        padding: 60px 40px;
         text-align: center;
         background: #f9fafb;
         border-radius: 12px;
-        border: 2px solid #e5e7eb;
+        border: 2px dashed #e5e7eb;
     }
 
     .empty-state p {
@@ -332,24 +384,44 @@
         font-size: 1rem;
     }
 
+    .empty-state a {
+        color: #21aef5;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .empty-state a:hover {
+        text-decoration: underline;
+    }
+
     /* Responsive tweaks */
-    @media (max-width: 720px) {
+    @media (max-width: 768px) {
         .page-wrap {
-            padding: 12px;
-            margin: 12px;
+            margin: 16px auto;
+            padding: 0 16px;
         }
 
-        .page-header {
+        .page-section-header {
             flex-direction: column;
             align-items: flex-start;
         }
 
-        .saved-item {
+        .header-actions {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .recent-item {
             flex-direction: column;
             align-items: flex-start;
         }
 
-        .saved-item-actions {
+        .recent-item-actions {
             width: 100%;
             flex-direction: column;
         }
@@ -359,21 +431,18 @@
             width: 100% !important;
             justify-content: center !important;
         }
-
-        .header-actions {
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
     }
 </style>
 
+<div class="side-actions" aria-hidden="false" id="sideActions">
+    <span class="side-indicator">›</span>
+    <div class="side-panel" role="toolbar" aria-orientation="vertical" aria-expanded="false">
+        <button class="btn btn-back" type="button" onclick="history.back()">← Back</button>
+    </div>
+</div>
+<div class="side-overlay" aria-hidden="true" id="sideOverlay"></div>
+
 <div class="page-wrap">
-    <button class="btn-back" type="button" onclick="history.back()">Back</button>
 
     <div id="shout" class="shout" data-message="" aria-hidden="true" style="display:none">
         <div class="shout-inner"></div>
@@ -405,15 +474,16 @@
 
 
 
-    <div class="page-header">
-        <h1>Saved Data</h1>
+
+    <div class="page-section-header">
+        <h1>Saved Form Reports</h1>
         <div class="header-actions">
             <button id="btnCreateNew" class="btn" type="button">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                Create
+                Create New
             </button>
             <button id="btnDeleteAll" class="btn danger" type="button">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -429,7 +499,7 @@
         <?php if (!empty($forms)): ?>
             <div class="saved-list">
                 <?php foreach($forms as $form): ?>
-                    <div class="recent-item" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; border: 3px solid #000; border-radius: 8px; padding: 18px; background: #ffffff;">
+                    <div class="recent-item">
                         <div>
                             <?php
                                 $from = !empty($form['from_name']) ? $form['from_name'] : '--Blank--';
@@ -450,7 +520,7 @@
                             <div><strong>From:</strong> <?= esc($from) ?></div>
                             <div><strong>Subject:</strong> <small title="<?= esc($subjectFull) ?>"><?= $subjectTrunc ?></small></div>
                         </div>
-                        <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                        <div class="recent-item-actions">
                             <a href="<?= site_url('form/view/' . $form['id']) ?>" class="btn-view-item" style="text-decoration: none;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -471,7 +541,7 @@
             </div>
         <?php else: ?>
             <div class="empty-state">
-                <p>No data yet. <a href="<?= site_url('form') ?>" style="color: #21aef5ff; text-decoration: none; font-weight: 700;">Create your first entry!</a></p>
+                <p>No saved form reports yet. <a href="<?= site_url('form') ?>">Create your first entry!</a></p>
             </div>
         <?php endif; ?>
     </div>
@@ -480,6 +550,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var currentDeleteId = null;
+    var sideActions = document.getElementById('sideActions');
+    var sideOverlay = document.getElementById('sideOverlay');
+    var hoverTimeout;
     var deleteItemConfirm = document.getElementById('deleteItemConfirm');
     var deleteCancelItem = document.getElementById('deleteCancelItem');
     var deleteConfirmItem = document.getElementById('deleteConfirmItem');
@@ -488,6 +561,25 @@ document.addEventListener('DOMContentLoaded', function() {
     var deleteAllConfirm = document.getElementById('deleteAllConfirm');
     var deleteAllCancel = document.getElementById('deleteAllCancel');
     var deleteAllConfirmBtn = document.getElementById('deleteAllConfirmBtn');
+
+    if (sideActions) {
+        sideActions.addEventListener('mouseenter', function() {
+            hoverTimeout = setTimeout(function() {
+                sideActions.classList.add('show');
+            }, 500);
+        });
+
+        sideActions.addEventListener('mouseleave', function() {
+            clearTimeout(hoverTimeout);
+            sideActions.classList.remove('show');
+        });
+
+        if (sideOverlay) {
+            sideOverlay.addEventListener('click', function() {
+                sideActions.classList.remove('show');
+            });
+        }
+    }
 
     // Redirect to form creation page
     if (btnCreateNew) {

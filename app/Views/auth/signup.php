@@ -13,7 +13,7 @@ $session = session();
 
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, rgb(183, 200, 209) 0%, rgb(189, 211, 223) 100%);
+            background: linear-gradient(135deg, rgb(231, 233, 235) 0%, rgb(171, 203, 207) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -30,8 +30,10 @@ $session = session();
             padding: 50px 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.25);
             width: 100%;
-            max-width: 420px;
-            animation: slideUp 0.5s ease-out;
+            max-width: 440px;
+            animation: slideUp 0.5s cubic-bezier(0.2, 0.9, 0.2, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes slideUp {
@@ -46,23 +48,24 @@ $session = session();
         }
 
         h1 {
-            color: #2b2b2b;
+            color: #000;
             font-size: 1.8rem;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
 
         .subtitle {
-            color: #7a7a7a;
+            color: #666;
             text-align: center;
             font-size: 0.95rem;
-            margin-bottom: 30px;
-            display: none;
+            margin-bottom: 28px;
+            display: block;
         }
 
         .alert {
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border-radius: 10px;
             margin-bottom: 20px;
             font-size: 0.9rem;
             animation: slideDown 0.4s ease-out;
@@ -80,15 +83,15 @@ $session = session();
         }
 
         .alert.error {
-            background: #fee;
-            color: #c33;
-            border-left: 4px solid #c33;
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #dc2626;
         }
 
         .alert.success {
-            background: #efe;
-            color: #3c3;
-            border-left: 4px solid #3c3;
+            background: #dcfce7;
+            color: #166534;
+            border-left: 4px solid #10b981;
         }
 
         form {
@@ -104,20 +107,21 @@ $session = session();
         }
 
         label {
-            color: #2b2b2b;
+            color: #000;
             font-weight: 600;
             font-size: 0.95rem;
         }
 
         input {
             padding: 12px 14px;
-            border: 2px solid #e6eef7;
+            border: 2px solid #e5e7eb;
             border-radius: 10px;
             font-size: 0.95rem;
             font-family: inherit;
-            background: #fbfdff;
-            transition: border-color 180ms ease, box-shadow 180ms ease;
+            background: #f9fafb;
+            transition: all 180ms ease;
             outline: none;
+            color: #000;
         }
 
         input::-webkit-credentials-auto-fill-button,
@@ -133,22 +137,23 @@ $session = session();
         }
 
         input:focus {
-            border-color: #21aef5ff;
+            border-color: #21aef5;
+            background: #ffffff;
             box-shadow: 0 0 0 3px rgba(33, 174, 245, 0.1);
         }
 
         .btn {
-            background: rgb(46, 86, 219);
-            color: #fff;
+            background: linear-gradient(135deg, #21aef5 0%, #1e9dd8 100%);
+            color: white;
             border: none;
-            padding: 14px 20px;
+            padding: 12px 20px;
             border-radius: 10px;
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
-            transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+            transition: all 180ms ease;
             box-shadow: 0 8px 20px rgba(33, 174, 245, 0.25);
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .btn:hover {
@@ -161,28 +166,29 @@ $session = session();
             transform: translateY(-1px);
         }
 
-        .login-link {
+        .auth-link {
             text-align: center;
-            margin-top: 20px;
-            color: #7a7a7a;
+            margin-top: 24px;
+            color: #666;
             font-size: 0.95rem;
         }
 
-        .login-link a {
-            color: #21aef5ff;
+        .auth-link a {
+            color: #21aef5;
             text-decoration: none;
             font-weight: 700;
             transition: color 180ms ease;
         }
 
-        .login-link a:hover {
-            color: #1e9dd8ff;
+        .auth-link a:hover {
+            color: #1e9dd8;
             text-decoration: underline;
         }
 
         .error-list {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .error-list li {
@@ -206,14 +212,14 @@ $session = session();
             background: none;
             border: none;
             cursor: pointer;
-            color: black;
+            color: #666;
             font-size: 1.2rem;
             padding: 6px;
             display: none;
             align-items: center;
             justify-content: center;
-            transition: color 180ms ease, opacity 180ms ease;
-            opacity: 0.5;
+            transition: all 180ms ease;
+            opacity: 0.6;
         }
 
         .toggle-password.visible {
@@ -221,21 +227,18 @@ $session = session();
         }
 
         .toggle-password:hover {
-            color: black;
-            opacity: 0.7;
-        }
-
-        .toggle-password.active {
+            color: #000;
             opacity: 1;
         }
 
         @media (max-width: 480px) {
             .signup-container {
                 padding: 35px 25px;
+                max-width: 100%;
             }
 
             h1 {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
 
             input, .btn {
@@ -247,13 +250,13 @@ $session = session();
 <body>
     <div class="signup-container">
         <h1>Create Account</h1>
-        <p class="subtitle">ORD Form System</p>
+        <p class="subtitle">Join ORD Form System</p>
 
         <?php if ($session->has('errors')): ?>
             <div class="alert error">
                 <ul class="error-list">
                     <?php foreach ($session->getFlashdata('errors') as $error): ?>
-                        <li><?= $error ?></li>
+                        <li>• <?= $error ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -261,7 +264,7 @@ $session = session();
 
         <?php if ($session->has('success')): ?>
             <div class="alert success">
-                <?= $session->getFlashdata('success') ?>
+                ✓ <?= $session->getFlashdata('success') ?>
             </div>
         <?php endif; ?>
 
@@ -276,7 +279,7 @@ $session = session();
 
             <div class="form-group">
                 <label for="email">Username</label>
-                <input type="text" id="email" name="email" placeholder="Enter your username (no spaces)" 
+                <input type="text" id="email" name="email" placeholder="Choose a username (no spaces)" 
                        value="<?= old('email') ?>" required>
             </div>
 
@@ -285,8 +288,8 @@ $session = session();
                 <div class="password-wrapper">
                     <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required autocomplete="off">
                     <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
-                        <svg class="eye-hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                        <svg class="eye-shown" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg class="eye-hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        <svg class="eye-shown" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </button>
                 </div>
             </div>
@@ -297,17 +300,17 @@ $session = session();
                     <input type="password" id="password_confirm" name="password_confirm" 
                            placeholder="Confirm your password" required autocomplete="off">
                     <button type="button" class="toggle-password" id="togglePasswordConfirm" aria-label="Toggle password visibility">
-                        <svg class="eye-hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                        <svg class="eye-shown" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <svg class="eye-hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        <svg class="eye-shown" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </button>
                 </div>
             </div>
 
-            <button type="submit" class="btn">Sign Up</button>
+            <button type="submit" class="btn">Create Account</button>
         </form>
 
-        <div class="login-link">
-            Already have an account? <a href="<?= base_url('auth/login') ?>">Login here</a>
+        <div class="auth-link">
+            Already have an account? <a href="<?= base_url('auth/login') ?>">Sign in</a>
         </div>
     </div>
 

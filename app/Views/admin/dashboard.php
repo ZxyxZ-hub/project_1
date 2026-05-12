@@ -18,7 +18,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         html, body { height: 100%; }
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, rgb(231, 233, 235) 0%, rgb(171, 203, 207) 100%);
+            background: #f0f4f8;
             color: #000;
             overflow-y: scroll;
         }
@@ -91,8 +91,8 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
             background: #f3f4f6;
-            border-left-color: #667eea;
-            color: #667eea;
+            border-left-color: #21aef5;
+            color: #21aef5;
         }
 
         .sidebar-icon {
@@ -156,7 +156,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         }
 
         .logout-btn {
-            background: #ef4444;
+            background: #dc2626;
             color: #fff;
             border: none;
             padding: 10px 24px;
@@ -164,12 +164,14 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             font-weight: 600;
             cursor: pointer;
             font-size: 0.95rem;
-            transition: background 200ms ease, transform 180ms ease;
+            transition: all 200ms ease;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
         }
 
         .logout-btn:hover {
-            background: #dc2626;
+            background: #b91c1c;
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
         }
 
         .container {
@@ -207,12 +209,12 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         }
 
         .tab-btn:hover {
-            color: #667eea;
+            color: #21aef5;
         }
 
         .tab-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
+            color: #21aef5;
+            border-bottom-color: #21aef5;
         }
 
         .tab-content {
@@ -300,12 +302,12 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         }
 
         .btn-edit {
-            background: #3b82f6;
+            background: #21aef5;
             color: #fff;
         }
 
         .btn-edit:hover {
-            background: #2563eb;
+            background: #1e9dd8;
             transform: translateY(-2px);
         }
 
@@ -362,7 +364,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         }
 
         .modal-close {
-            background: #ef4444;
+            background: #dc2626;
             border: none;
             width: 36px;
             height: 36px;
@@ -372,12 +374,13 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 150ms ease;
+            transition: all 150ms ease;
             color: #fff;
         }
 
         .modal-close:hover {
-            background: #dc2626;
+            background: #b91c1c;
+            transform: rotate(90deg);
         }
 
         .modal-body {
@@ -427,8 +430,8 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #21aef5;
+            box-shadow: 0 0 0 3px rgba(33, 174, 245, 0.1);
         }
 
         .password-wrapper {
@@ -490,12 +493,12 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         }
 
         .btn-modal.btn-edit {
-            background: #667eea;
+            background: #21aef5;
             color: #fff;
         }
 
         .btn-modal.btn-edit:hover {
-            background: #5568d3;
+            background: #1e9dd8;
             transform: translateY(-2px);
         }
 

@@ -1,94 +1,86 @@
+<link rel="stylesheet" href="<?= base_url('css/shared-styles.css') ?>">
 <style>
-    /* Buttons + layout (inline) */
-    .page-wrap {
-        max-width: 980px;
-        margin: 18px auto;
-        padding: 18px;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, rgb(231, 233, 235) 0%, rgb(171, 203, 207) 100%); }
+    
+    body { color: #000; }
 
-    .top-bar {
+    /* Page Header with Navigation */
+    .page-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 16px 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 18px;
-        gap: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    .top-bar .logout-btn {
-        background: #dc2626;
-        color: white;
-        border: none;
-        padding: 8px 16px;
+    .page-header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .page-header-logo {
+        width: 40px;
+        height: 40px;
         border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: background 150ms ease;
+        object-fit: contain;
     }
 
-    .top-bar .logout-btn:hover {
-        background: #b91c1c;
-    }
-
-    .top-bar .logout-btn svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    /* Logout button positioned at top-left */
-    .logout-form-top-left {
-        position: absolute;
-        top: 18px;
-        left: 18px;
+    .page-header-title h1 {
         margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #000;
     }
 
-    .logout-form-top-left .logout-btn {
-        background: #dc2626;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: background 150ms ease;
+    .page-header-right {
+        display: flex;
+        gap: 12px;
+        align-items: center;
     }
 
-    .logout-form-top-left .logout-btn:hover {
-        background: #b91c1c;
+    /* Page Layout */
+    .page-wrap {
+        max-width: 1100px;
+        margin: 32px auto;
+        padding: 0 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .logout-form-top-left .logout-btn {
-        padding: 12px 24px;
-        font-size: 1rem;
-    }
+    /* Floating side actions */
+    .side-actions{position:fixed;left:0;top:0;width:80px;height:100vh;z-index:1100;display:flex;align-items:flex-start;justify-content:flex-start;padding-top:20px;cursor:pointer}
+    .side-indicator{position:fixed;left:12px;top:24px;font-size:34px;line-height:1;color:#dc2626;font-weight:900;opacity:0.9;transition:all 200ms ease;pointer-events:none;text-shadow:0 2px 6px rgba(0,0,0,0.18)}
+    .side-actions:hover .side-indicator{opacity:1;left:16px}
+    .side-actions .side-panel{position:fixed;left:0;top:20px;transform:translateX(-8px);display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border-radius:0 8px 8px 0;opacity:0;transition:opacity .18s ease,transform .18s ease;pointer-events:none;box-shadow:0 12px 30px rgba(0,0,0,0.12);z-index:1200}
+    .side-actions.show .side-panel{opacity:1;transform:translateX(0);pointer-events:auto}
+    .side-actions .btn{padding:12px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:0.95rem;display:inline-flex;align-items:center;gap:8px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,0.08);min-width:140px;justify-content:center;transition:all 150ms ease;white-space:nowrap}
+    .side-actions .btn-back{background:#dc2626;color:#fff}
+    .side-actions .btn-back:hover{background:#b91c1c;transform:translateY(-2px)}
+    .side-actions .btn-logout{background:#dc2626;color:#fff}
+    .side-actions .btn-logout:hover{background:#b91c1c;transform:translateY(-2px)}
 
-        /* Back button for navigation */
-        .btn-back {
-            position: absolute;
-            top: 18px;
-            left: 18px;
-            background: rgb(247, 11, 11);
-            color: rgb(255, 255, 255);
-            border: 2px solid rgb(247, 11, 11);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+    /* overlay that blurs & darkens main content when panel open */
+    .side-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.18);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:1000}
+    .side-actions.show ~ .side-overlay{opacity:1;pointer-events:auto}
 
+    /* Actions Section */
     .actions {
         display: flex;
         gap: 12px;
         justify-content: center;
         align-items: center;
-        margin-bottom: 18px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
     }
 
-    .btn {
-        background: #21aef5ff;
+    .btn, button {
+        background: #21aef5;
         color: #fff;
         border: none;
         padding: 12px 24px;
@@ -96,7 +88,7 @@
         font-weight: 700;
         cursor: pointer;
         box-shadow: 0 8px 20px rgba(33,174,245,0.18);
-        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        transition: all 180ms ease;
         font-size: 1rem;
         display: flex;
         align-items: center;
@@ -104,179 +96,116 @@
         white-space: nowrap;
     }
 
-    .btn:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 14px 34px rgba(33,174,245,0.22);
+    .btn:hover, button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(33,174,245,0.28);
+        filter: brightness(1.05);
     }
 
     .btn.secondary {
         background: #fbbf24 !important;
         color: #000 !important;
-        border: none !important;
         box-shadow: 0 8px 20px rgba(251, 191, 36, 0.18) !important;
     }
 
     .btn.secondary:hover {
-        box-shadow: 0 14px 34px rgba(251, 191, 36, 0.22) !important;
+        box-shadow: 0 12px 30px rgba(251, 191, 36, 0.28) !important;
     }
 
-    #closeView {
-        background: #f70b0b !important;
-        color: #fff !important;
-        box-shadow: 0 8px 20px rgba(247, 11, 11, 0.18) !important;
-    }
-
-    #closeView:hover {
-        box-shadow: 0 14px 34px rgba(247, 11, 11, 0.22) !important;
-    }
-
+    /* Card Container */
     .card {
         background: #ffffff;
         border-radius: 12px;
-        padding: 18px;
-        box-shadow: 0 8px 30px rgba(7,12,18,0.06);
-        margin-bottom: 18px;
+        padding: 28px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 24px;
+        transition: all 200ms ease;
     }
 
-    /* Form inputs nicer spacing */
-    form input, form textarea, form button[type="submit"] {
-        width: 100%;
-        padding: 10px 12px;
-        margin: 8px 0;
-        border-radius: 8px;
-        border: 1px solid #e6eef7;
-        font-size: 0.95rem;
-        background: #fbfdff;
-        box-sizing: border-box;
-        outline: none;
+    .card:hover {
+        border-color: #21aef5;
+        box-shadow: 0 8px 24px rgba(33,174,245,0.08);
     }
 
-    form textarea { min-height: 110px; resize: vertical; }
-
-    form button[type="submit"] {
-        background: #21aef5ff;
-        color: #fff;
-        border: none;
-        padding: 10px 14px;
-        cursor: pointer;
-        border-radius: 8px;
+    .card h2 {
+        margin: 0 0 16px 0;
+        font-size: 1.4rem;
         font-weight: 700;
-        margin-top: 8px;
+        color: #000;
     }
 
-    /* Saved items list */
-    .saved-list { display: flex; flex-direction: column; gap: 12px; }
-    .saved-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        padding: 14px;
-        border-radius: 8px;
-        border: 3px solid #666;
-        background: #ffffff;
-    }
-    .saved-item strong { color: #000; font-weight: 700; font-size: 1rem; }
-    .saved-item a { color: #21aef5ff; text-decoration: none; font-weight: 700; }
-
-    .btn-view-item {
-        background: #fbbf24 !important;
-        color: #000 !important;
-        border: none !important;
-        padding: 8px 14px !important;
-        border-radius: 6px !important;
-        font-weight: 700 !important;
-        cursor: pointer !important;
-        font-size: 0.9rem !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        box-shadow: 0 6px 16px rgba(251, 191, 36, 0.15) !important;
-        transition: transform 180ms ease, box-shadow 180ms ease !important;
+    .card p {
+        margin: 0;
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.6;
     }
 
-    .btn-view-item:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 10px 24px rgba(251, 191, 36, 0.25) !important;
-    }
-
-    /* Scrollable Recently Added Container */
+    /* Recent Items Scroll */
     .recently-added-scroll {
-        max-height: 330px;
+        max-height: 400px;
         overflow-y: auto;
         overflow-x: hidden;
-        padding-right: 4px;
+        padding-right: 6px;
         width: 100%;
         box-sizing: border-box;
     }
 
     .recently-added-scroll::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
     }
 
     .recently-added-scroll::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: #f0f0f0;
         border-radius: 10px;
     }
 
     .recently-added-scroll::-webkit-scrollbar-thumb {
-        background: #bbb;
+        background: #cbd5e1;
         border-radius: 10px;
     }
 
     .recently-added-scroll::-webkit-scrollbar-thumb:hover {
-        background: #888;
+        background: #94a3b8;
     }
 
     .recent-item {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        padding: 12px;
-        border-radius: 8px;
-        border: 2px solid #000;
-        background: #ffffff;
+        gap: 8px;
+        padding: 14px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
         transition: all 200ms ease;
     }
 
     .recent-item:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+        border-color: #21aef5;
+        box-shadow: 0 4px 12px rgba(33,174,245,0.1);
     }
 
     .recent-item strong {
         color: #000;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
 
     .recent-item small {
         color: #666;
-        font-weight: 600;
         font-size: 0.85rem;
     }
 
-    /* Hidden utility */
-    .hidden { display: none !important; }
-
-    /* Full page view mode for saved data */
-    .full-view {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: auto;
-        background: #ffffff;
-        padding: 28px;
-        z-index: 9999;
+    .recent-item div {
+        display: flex;
+        gap: 8px;
+        font-size: 0.9rem;
     }
 
-    .full-view h2 {
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
-
-    /* Floating Modal Form */
+    /* Modal Styles */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -288,7 +217,8 @@
         align-items: center;
         justify-content: center;
         z-index: 9998;
-        animation: fadeIn 0.2s ease;
+        animation: fadeIn 0.3s ease;
+        backdrop-filter: blur(2px);
     }
 
     .modal-overlay.show {
@@ -303,20 +233,20 @@
     .floating-form-container {
         background: #ffffff;
         border-radius: 16px;
-        padding: 28px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        max-width: 500px;
+        padding: 32px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        max-width: 540px;
         width: 90%;
         max-height: 90vh;
         overflow-y: auto;
-        animation: slideUp 0.3s ease;
+        animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
         position: relative;
     }
 
     @keyframes slideUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
         }
         to {
             opacity: 1;
@@ -328,70 +258,79 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #f0f0f0;
     }
 
     .modal-header h2 {
         margin: 0;
         color: #000;
         font-weight: 700;
+        font-size: 1.4rem;
     }
 
     .modal-close {
         background: #f3f4f6;
         border: none;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         border-radius: 8px;
         cursor: pointer;
         font-size: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 180ms ease;
+        transition: all 180ms ease;
+        color: #666;
+        flex-shrink: 0;
     }
 
     .modal-close:hover {
         background: #e5e7eb;
+        color: #000;
+        transform: rotate(90deg);
     }
 
     .modal-form {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
     }
 
     .form-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
     }
 
     .form-group label {
-        font-weight: 700;
+        font-weight: 600;
         color: #000;
         font-size: 0.95rem;
     }
 
     .modal-form input,
     .modal-form textarea {
-        padding: 12px !important;
+        padding: 12px 14px !important;
         margin: 0 !important;
-        border-radius: 8px !important;
-        border: 2px solid #d1d5db !important;
+        border-radius: 10px !important;
+        border: 2px solid #e5e7eb !important;
         font-size: 0.95rem !important;
         background: #f9fafb !important;
         box-sizing: border-box !important;
         outline: none !important;
         color: #000 !important;
         font-weight: 500 !important;
-        transition: border-color 180ms ease, background-color 180ms ease;
+        transition: all 180ms ease !important;
+        font-family: inherit !important;
     }
 
     .modal-form input:focus,
     .modal-form textarea:focus {
-        border-color: #21aef5ff !important;
+        border-color: #21aef5 !important;
         background: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(33, 174, 245, 0.1) !important;
     }
 
     .modal-form textarea {
@@ -401,31 +340,159 @@
 
     .modal-form button[type="submit"] {
         margin: 0 !important;
-        padding: 12px 18px !important;
-        background: #21aef5ff !important;
+        padding: 12px 20px !important;
+        background: #21aef5 !important;
         color: #fff !important;
         border: none !important;
-        border-radius: 8px !important;
+        border-radius: 10px !important;
         font-weight: 700 !important;
         cursor: pointer !important;
         font-size: 0.95rem !important;
         box-shadow: 0 8px 20px rgba(33, 174, 245, 0.18) !important;
-        transition: transform 180ms ease, box-shadow 180ms ease !important;
+        transition: all 180ms ease !important;
         margin-top: 12px !important;
     }
 
     .modal-form button[type="submit"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 12px 30px rgba(33, 174, 245, 0.25) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 30px rgba(33, 174, 245, 0.28) !important;
     }
 
-    /* Responsive tweaks */
-    @media (max-width: 720px) {
-        .page-wrap { padding: 12px; margin: 12px; }
+    /* Toast Notifications */
+    .shout {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        background: #10b981;
+        color: #fff;
+        padding: 14px 20px;
+        border-radius: 10px;
+        box-shadow: 0 12px 36px rgba(16, 185, 129, 0.25);
+        z-index: 99999;
+        opacity: 0;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transform: translateX(400px);
+        animation: slideInRight 0.4s ease;
+    }
+
+    .shout.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(400px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .shout.error {
+        background: #dc2626;
+        box-shadow: 0 12px 36px rgba(220, 38, 38, 0.25);
+    }
+
+    /* Confirmation Dialog */
+    .confirm-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+        backdrop-filter: blur(2px);
+    }
+
+    .confirm-overlay.show {
+        display: flex;
+    }
+
+    .confirm-dialog {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 420px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        text-align: center;
+        animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    .confirm-dialog h3 {
+        margin: 0 0 12px 0;
+        color: #000;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .confirm-dialog p {
+        color: #666;
+        margin-bottom: 24px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .confirm-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .confirm-actions button {
+        padding: 10px 24px;
+        border-radius: 10px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 180ms ease;
+        font-size: 0.95rem;
+        flex: 1;
+    }
+
+    .confirm-actions .btn-stay {
+        background: #21aef5;
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(33, 174, 245, 0.18);
+    }
+
+    .confirm-actions .btn-stay:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(33, 174, 245, 0.28);
+    }
+
+    .confirm-actions .btn-exit {
+        background: #f3f4f6;
+        color: #333;
+        border: 2px solid #e5e7eb;
+    }
+
+    .confirm-actions .btn-exit:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+        transform: translateY(-2px);
+    }
+
+    /* Hidden utility */
+    .hidden { display: none !important; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-wrap { margin: 16px auto; padding: 0 16px; }
         .actions { flex-direction: column; }
         .btn { width: 100%; }
-        .full-view { padding: 18px; }
-        .floating-form-container { width: 95%; padding: 20px; }
+        .floating-form-container { padding: 24px; }
+        .page-header { padding: 12px 16px; }
     }
 </style>
 
@@ -539,9 +606,15 @@
     </style>
 
 <div class="page-wrap">
-    <form action="<?= base_url('auth/logout') ?>" method="POST" class="logout-form-top-left">
-        <button type="submit" class="logout-btn">Logout</button>
-    </form>
+    <div class="side-actions" aria-hidden="false" id="sideActions">
+        <span class="side-indicator">›</span>
+        <div class="side-panel" role="toolbar" aria-orientation="vertical" aria-expanded="false">
+            <form action="<?= base_url('auth/logout') ?>" method="POST" style="margin:0;">
+                <button type="submit" class="btn btn-logout">Logout</button>
+            </form>
+        </div>
+    </div>
+    <div class="side-overlay" aria-hidden="true" id="sideOverlay"></div>
     <?php
         $success = isset($success) ? $success : session()->getFlashdata('success');
         $error   = isset($error) ? $error : session()->getFlashdata('error');
@@ -645,10 +718,32 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    var sideActions = document.getElementById('sideActions');
+    var sideOverlay = document.getElementById('sideOverlay');
+    var hoverTimeout;
     var btnCreate = document.getElementById('btnCreate');
     var formModal = document.getElementById('formModal');
     var modalClose = document.getElementById('modalClose');
     var createSection = document.getElementById('createSection');
+
+    if (sideActions) {
+        sideActions.addEventListener('mouseenter', function () {
+            hoverTimeout = setTimeout(function () {
+                sideActions.classList.add('show');
+            }, 500);
+        });
+
+        sideActions.addEventListener('mouseleave', function () {
+            clearTimeout(hoverTimeout);
+            sideActions.classList.remove('show');
+        });
+
+        if (sideOverlay) {
+            sideOverlay.addEventListener('click', function () {
+                sideActions.classList.remove('show');
+            });
+        }
+    }
 
     // Open floating form modal
     btnCreate.addEventListener('click', function (e) {

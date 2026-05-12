@@ -15,7 +15,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         html, body { height: 100%; }
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, rgb(231, 233, 235) 0%, rgb(171, 203, 207) 100%);
+            background: #f0f4f8;
             color: #000;
             overflow-y: scroll;
         }
@@ -41,14 +41,15 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             padding:10px 20px; color:#000; text-decoration:none;
             font-size:0.95rem; font-weight:500; border-left:3px solid transparent;
         }
-        .sidebar-menu a:hover, .sidebar-menu a.active { background:#f3f4f6; border-left-color:#667eea; color:#667eea; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background:#f3f4f6; border-left-color:#21aef5; color:#21aef5; }
         .sidebar-icon { font-size:18px; }
 
         /* Main content */
         .main-content { flex: 1; display: flex; flex-direction: column; }
         header { background: transparent; border-bottom: 1px solid rgba(229,231,235,0.6); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: none; }
         .header-title h1 { font-size: 1.5rem; color: #000; font-weight: 700; }
-        .logout-btn { background: #ef4444; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; }
+        .logout-btn { background: #dc2626; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 200ms ease; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15); }
+        .logout-btn:hover { background: #b91c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25); }
 
         .container { flex: 1; padding: 40px; overflow-y: auto; }
 
@@ -56,8 +57,8 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         .tabs-container { background: transparent; border-radius: 12px; padding: 0; box-shadow: none; margin-bottom: 30px; }
         .tabs { display: flex; border-bottom: 1px solid #e5e7eb; list-style: none; }
         .tab-btn { background: none; color: #000; border: none; padding: 16px 24px; font-weight: 600; cursor: pointer; font-size: 0.95rem; border-bottom: 3px solid transparent; transition: border-color 200ms ease, color 200ms ease; position: relative; }
-        .tab-btn:hover { color: #667eea; }
-        .tab-btn.active { color: #667eea; border-bottom-color: #667eea; }
+        .tab-btn:hover { color: #21aef5; }
+        .tab-btn.active { color: #21aef5; border-bottom-color: #21aef5; }
 
         .tab-content { display: none; padding: 20px; min-height: 320px; }
         .tab-content.active { display: block; }
