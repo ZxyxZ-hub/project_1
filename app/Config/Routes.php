@@ -22,6 +22,10 @@ $routes->post('auth/logout', 'Auth::logout', ['as' => 'logout']);
 // Admin routes (protected - requires admin role)
 $routes->get('admin', 'Admin::index', ['filter' => 'auth:admin']);
 $routes->get('admin/users', 'Admin::users', ['filter' => 'auth:admin']);
+$routes->get('admin/history', 'Admin::history', ['filter' => 'auth:admin']);
+$routes->get('admin/history/json', 'Admin::historyJson', ['filter' => 'auth:admin']);
+$routes->get('admin/sidebar-stats', 'Admin::sidebarStatsJson', ['filter' => 'auth:admin']);
+$routes->get('admin/history/view/(:num)', 'Admin::historyView/$1', ['filter' => 'auth:admin']);
 $routes->post('admin/approve-user/(:num)', 'Admin::approveUser/$1', ['filter' => 'auth:admin']);
 $routes->post('admin/deny-user/(:num)', 'Admin::denyUser/$1', ['filter' => 'auth:admin']);
 $routes->post('admin/update-role/(:num)', 'Admin::updateRole/$1', ['filter' => 'auth:admin']);

@@ -17,5 +17,6 @@ class FormModel extends Model
         'date_issued',
         'instructions',
         'target_date'
+        ,'created_by'
     ];
 }

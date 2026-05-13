@@ -41,6 +41,10 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             padding:10px 20px; color:#000; text-decoration:none;
             font-size:0.95rem; font-weight:500; border-left:3px solid transparent;
         }
+        .sidebar-menu a { justify-content: space-between; }
+        .sidebar-link-left { display:flex; align-items:center; gap:12px; min-width:0; }
+        .sidebar-stats { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; margin-left:12px; }
+        .sidebar-badge { display:inline-flex; align-items:center; justify-content:center; background:#fff; color:#000; border:1px solid #d1d5db; border-radius:999px; padding:2px 8px; font-size:0.72rem; font-weight:700; line-height:1.2; box-shadow:0 4px 12px rgba(0,0,0,0.06); white-space:nowrap; }
         .sidebar-menu a:hover, .sidebar-menu a.active { background:#f3f4f6; border-left-color:#21aef5; color:#21aef5; }
         .sidebar-icon { font-size:18px; }
 
@@ -95,12 +99,24 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
 
             <?php $uri = service('uri')->getPath();
                   $isAdminUsers = (strpos($uri, 'admin/users') !== false);
-                  $isAdminIndex = (strpos($uri, 'admin') !== false) && !$isAdminUsers;
+                  $isAdminIndex = (strpos($uri, 'admin') !== false) && !$isAdminUsers && strpos($uri, 'admin/history') === false;
+                  $isAdminHistory = (strpos($uri, 'admin/history') !== false);
             ?>
 
             <ul class="sidebar-menu">
-                <li><a href="<?= base_url('admin') ?>" class="<?= $isAdminIndex ? 'active' : '' ?>"><span class="sidebar-icon">⏳</span> Pending Request</a></li>
-                <li><a href="<?= base_url('admin/users') ?>" class="<?= $isAdminUsers ? 'active' : '' ?>"><span class="sidebar-icon">👥</span> Users</a></li>
+                <li>
+                    <a href="<?= base_url('admin') ?>" class="<?= $isAdminIndex ? 'active' : '' ?>">
+                        <span class="sidebar-link-left"><span class="sidebar-icon">⏳</span> Pending Request</span>
+                        <span class="sidebar-badge" id="pendingBadge"><?= esc(($pendingRequested ?? 0) + ($pendingAccepted ?? 0)) ?></span>
+                    </a>
+                </li>
+                <li><a href="<?= base_url('admin/users') ?>" class="<?= $isAdminUsers ? 'active' : '' ?>"><span class="sidebar-link-left"><span class="sidebar-icon">👥</span> Users</span></a></li>
+                <li>
+                    <a href="<?= base_url('admin/history') ?>" class="<?= $isAdminHistory ? 'active' : '' ?>">
+                        <span class="sidebar-link-left"><span class="sidebar-icon">📜</span> History</span>
+                        <span class="sidebar-badge" id="historyBadge"><?= esc(($historyCreated ?? 0) + ($historyDeleted ?? 0)) ?></span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -182,6 +198,32 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             document.getElementById(name).classList.add('active');
             document.getElementById('tab-' + name).classList.add('active');
         }
+
+        (function () {
+            var endpoint = '<?= base_url('admin/sidebar-stats') ?>';
+
+            function pollSidebarStats() {
+                fetch(endpoint, { credentials: 'same-origin' })
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        // Calculate and update combined totals
+                        var pendingTotal = (data.pendingRequested || 0) + (data.pendingAccepted || 0);
+                        var historyTotal = (data.historyCreated || 0) + (data.historyDeleted || 0);
+                        
+                        document.getElementById('pendingBadge').textContent = pendingTotal;
+                        document.getElementById('historyBadge').textContent = historyTotal;
+                    })
+                    .catch(function (err) {
+                        console.warn('sidebar stats error', err);
+                    });
+            }
+
+            pollSidebarStats();
+            setInterval(pollSidebarStats, 5000);
+        })();
     </script>
 </body>
 </html>

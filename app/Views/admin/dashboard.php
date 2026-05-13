@@ -79,6 +79,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             display: flex;
             align-items: center;
             gap: 12px;
+            justify-content: space-between;
             padding: 12px 20px;
             color: #000;
             text-decoration: none;
@@ -86,6 +87,38 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
             font-weight: 500;
             transition: background 150ms ease;
             border-left: 3px solid transparent;
+        }
+
+        .sidebar-link-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .sidebar-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+
+        .sidebar-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: #000;
+            border: 1px solid #d1d5db;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1.2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            white-space: nowrap;
         }
 
         .sidebar-menu a:hover,
@@ -588,8 +621,23 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
                     </div>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="<?= base_url('admin') ?>" class="active"><span class="sidebar-icon">⏳</span> Pending Request</a></li>
-                <li><a href="<?= base_url('admin/users') ?>"><span class="sidebar-icon">👥</span> Users</a></li>
+                <?php $uri = current_url(true)->getPath(); ?>
+                <?php $isAdminIndex = (strpos($uri, 'admin') !== false && strpos($uri, 'admin/users') === false && strpos($uri, 'admin/history') === false); ?>
+                <?php $isAdminUsers = (strpos($uri, 'admin/users') !== false); ?>
+                <?php $isAdminHistory = (strpos($uri, 'admin/history') !== false); ?>
+                <li>
+                    <a href="<?= base_url('admin') ?>" class="<?= $isAdminIndex ? 'active' : '' ?>">
+                        <span class="sidebar-link-left"><span class="sidebar-icon">⏳</span> Pending Request</span>
+                        <span class="sidebar-badge" id="pendingBadge"><?= esc(($pendingRequested ?? 0) + ($pendingAccepted ?? 0)) ?></span>
+                    </a>
+                </li>
+                <li><a href="<?= base_url('admin/users') ?>" class="<?= $isAdminUsers ? 'active' : '' ?>"><span class="sidebar-link-left"><span class="sidebar-icon">👥</span> Users</span></a></li>
+                <li>
+                    <a href="<?= base_url('admin/history') ?>" class="<?= $isAdminHistory ? 'active' : '' ?>">
+                        <span class="sidebar-link-left"><span class="sidebar-icon">📜</span> History</span>
+                        <span class="sidebar-badge" id="historyBadge"><?= esc(($historyCreated ?? 0) + ($historyDeleted ?? 0)) ?></span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -597,7 +645,7 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
         <div class="main-content">
             <header>
                 <div class="header-left">
-                        <div class="header-title">
+                        <div class="header-tit  le">
                             <h1>Pending Requests</h1>
                         </div>
                 </div>
@@ -967,6 +1015,32 @@ if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
                 }
             });
         });
+
+        (function () {
+            var endpoint = '<?= base_url('admin/sidebar-stats') ?>';
+
+            function pollSidebarStats() {
+                fetch(endpoint, { credentials: 'same-origin' })
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        // Calculate and update combined totals
+                        var pendingTotal = (data.pendingRequested || 0) + (data.pendingAccepted || 0);
+                        var historyTotal = (data.historyCreated || 0) + (data.historyDeleted || 0);
+                        
+                        document.getElementById('pendingBadge').textContent = pendingTotal;
+                        document.getElementById('historyBadge').textContent = historyTotal;
+                    })
+                    .catch(function (err) {
+                        console.warn('sidebar stats error', err);
+                    });
+            }
+
+            pollSidebarStats();
+            setInterval(pollSidebarStats, 5000);
+        })();
     </script>
         </div>
     </div>

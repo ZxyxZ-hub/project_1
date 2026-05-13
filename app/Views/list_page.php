@@ -519,6 +519,7 @@
                             ?>
                             <div><strong>From:</strong> <?= esc($from) ?></div>
                             <div><strong>Subject:</strong> <small title="<?= esc($subjectFull) ?>"><?= $subjectTrunc ?></small></div>
+                            <div><strong>Created by:</strong> <?= esc(!empty($form['created_by']) ? $form['created_by'] : '--Unknown--') ?></div>
                         </div>
                         <div class="recent-item-actions">
                             <a href="<?= site_url('form/view/' . $form['id']) ?>" class="btn-view-item" style="text-decoration: none;">
@@ -695,18 +696,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data && data.success) {
                         deleteItemConfirm.classList.remove('show');
                         // Remove from list
-                        var deletedItem = document.querySelector('.delete-item-btn[data-id="' + currentDeleteId + '"]').closest('.saved-item');
-                        deletedItem.style.transition = 'opacity 0.3s ease';
-                        deletedItem.style.opacity = '0';
-                        setTimeout(function() {
-                            deletedItem.remove();
-                            
-                            // Check if list is now empty
-                            var remaining = document.querySelectorAll('.saved-item').length;
-                            if (remaining === 0) {
-                                location.reload();
-                            }
-                        }, 300);
+                        var btn = document.querySelector('.delete-item-btn[data-id="' + currentDeleteId + '"]');
+                        var deletedItem = btn ? btn.closest('.recent-item') : null;
+                        
+                        if (deletedItem) {
+                            deletedItem.style.transition = 'opacity 0.3s ease';
+                            deletedItem.style.opacity = '0';
+                            setTimeout(function() {
+                                deletedItem.remove();
+                                
+                                // Check if list is now empty
+                                var remaining = document.querySelectorAll('.recent-item').length;
+                                if (remaining === 0) {
+                                    location.reload();
+                                }
+                            }, 300);
+                        }
 
                         // Show success message
                         var shout = document.getElementById('shout');

@@ -101,6 +101,11 @@ class Setup extends BaseController
                         'type' => 'TEXT',
                         'null' => true,
                     ],
+                    'created_by' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 100,
+                        'null' => true,
+                    ],
                     'created_at' => [
                         'type' => 'DATETIME',
                         'null' => true,
@@ -116,6 +121,80 @@ class Setup extends BaseController
                 $messages[] = '✓ Forms table created successfully';
             } else {
                 $messages[] = '✓ Forms table already exists';
+            }
+
+            // Create history table to track create/delete events
+            if (!$db->tableExists('history')) {
+                $forge->addField([
+                    'id' => [
+                        'type' => 'INT',
+                        'constraint' => 11,
+                        'unsigned' => true,
+                        'auto_increment' => true,
+                    ],
+                    'item_table' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 50,
+                    ],
+                    'item_id' => [
+                        'type' => 'INT',
+                        'constraint' => 11,
+                        'null' => true,
+                    ],
+                    'action' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 20,
+                    ],
+                    'actor' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 100,
+                        'null' => true,
+                    ],
+                    'actor_full_name' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 100,
+                        'null' => true,
+                    ],
+                    'action_at' => [
+                        'type' => 'DATETIME',
+                        'null' => true,
+                    ],
+                    'from_name' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 255,
+                        'null' => true,
+                    ],
+                    'subject' => [
+                        'type' => 'TEXT',
+                        'null' => true,
+                    ],
+                    'date_received' => [
+                        'type' => 'DATE',
+                        'null' => true,
+                    ],
+                    'details' => [
+                        'type' => 'TEXT',
+                        'null' => true,
+                    ],
+                ]);
+
+                $forge->addPrimaryKey('id');
+                $forge->createTable('history');
+                $messages[] = '✓ History table created successfully';
+            } else {
+                $messages[] = '✓ History table already exists';
+            }
+
+            // Ensure legacy installs get the created_by column
+            if ($db->tableExists('forms') && ! $db->fieldExists('created_by', 'forms')) {
+                $forge->addColumn('forms', [
+                    'created_by' => [
+                        'type' => 'VARCHAR',
+                        'constraint' => 100,
+                        'null' => true,
+                    ],
+                ]);
+                $messages[] = '✓ Added created_by column to forms table';
             }
 
             // Insert admin user if not exists

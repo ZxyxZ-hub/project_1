@@ -923,11 +923,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     items.forEach(function(item) {
                         var from = item.from_name || '--Blank--';
                         var subject = item.subject || '--Blank--';
+                        var createdBy = item.created_by || '--Unknown--';
                         var truncated = truncateText(subject, 60);
 
                         html += '<div class="recent-item">' +
                             '<div><strong>From:</strong> ' + escapeHtml(from) + '</div>' +
                             '<div><strong>Subject:</strong> <small title="' + escapeHtml(subject) + '">' + escapeHtml(truncated) + '</small></div>' +
+                            '<div><strong>Created by:</strong> ' + escapeHtml(createdBy) + '</div>' +
                             '</div>';
                     });
                     container.innerHTML = html;
